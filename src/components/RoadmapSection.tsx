@@ -12,8 +12,9 @@ interface RoadmapSectionProps {
 }
 
 const generateRoadmap = (data: AssessmentData): RoadmapPhase[] => {
-  const timeline = data.answers.timeline;
-  const teamSize = data.answers.teamSize;
+  // Add safety checks for data structure
+  const timeline = data?.answers?.timeline || 'Medium-term (6-12 months)';
+  const teamSize = data?.answers?.teamSize || 'Medium (100-1,000 employees)';
   
   let phaseDuration = '3 months';
   if (timeline?.includes('Immediate')) phaseDuration = '6-8 weeks';
@@ -82,8 +83,17 @@ export function RoadmapSection({ assessmentData, onComplete }: RoadmapSectionPro
   const [selectedPhase, setSelectedPhase] = useState<string | null>(null);
 
   useEffect(() => {
-    const generatedRoadmap = generateRoadmap(assessmentData);
-    setRoadmap(generatedRoadmap);
+    console.log('RoadmapSection received assessment data:', assessmentData);
+    
+    // Add safety check before generating roadmap
+    if (assessmentData) {
+      const generatedRoadmap = generateRoadmap(assessmentData);
+      setRoadmap(generatedRoadmap);
+    } else {
+      console.warn('No assessment data available for roadmap generation');
+      // Set default roadmap if no data available
+      setRoadmap(generateRoadmap({} as AssessmentData));
+    }
   }, [assessmentData]);
 
   return (
