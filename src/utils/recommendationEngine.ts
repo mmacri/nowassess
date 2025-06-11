@@ -1,7 +1,7 @@
 
 import { AssessmentData, ServiceNowModule, AssessmentAnswers } from "@/types/assessment";
 
-// Enhanced ServiceNow modules with comprehensive resources and links
+// Enhanced ServiceNow modules with comprehensive resources and working links
 export const generateRecommendations = (data: AssessmentData): ServiceNowModule[] => {
   const modules: ServiceNowModule[] = [
     {
@@ -24,25 +24,25 @@ export const generateRecommendations = (data: AssessmentData): ServiceNowModule[
         {
           type: 'documentation',
           title: 'ITSM Product Overview',
-          url: 'https://www.servicenow.com/products/itsm/',
+          url: 'https://www.servicenow.com/products/itsm.html',
           description: 'Complete overview of IT Service Management capabilities'
         },
         {
           type: 'demo',
           title: 'ITSM Interactive Demo',
-          url: 'https://www.servicenow.com/products/itsm/',
+          url: 'https://www.servicenow.com/lpdem/demonow-digital-workflows.html',
           description: 'Experience ITSM capabilities with hands-on demo'
         },
         {
           type: 'datasheet',
           title: 'ITSM Solution Brief',
-          url: 'https://www.servicenow.com/solutions/it-service-management/',
+          url: 'https://www.servicenow.com/content/dam/servicenow-assets/public/en-us/doc-type/data-sheet/ds-itsm-pro.pdf',
           description: 'Technical specifications and feature details'
         },
         {
           type: 'training',
           title: 'ServiceNow Learning Portal',
-          url: 'https://nowlearning.servicenow.com/',
+          url: 'https://nowlearning.service-now.com/lxp',
           description: 'Comprehensive training modules for ITSM implementation'
         }
       ]
@@ -67,19 +67,19 @@ export const generateRecommendations = (data: AssessmentData): ServiceNowModule[
         {
           type: 'documentation',
           title: 'ITOM Product Suite',
-          url: 'https://www.servicenow.com/products/itom/',
+          url: 'https://www.servicenow.com/products/itom.html',
           description: 'Complete IT Operations Management solution overview'
         },
         {
           type: 'video',
           title: 'ITOM Discovery and Service Mapping',
-          url: 'https://www.servicenow.com/products/discovery/',
+          url: 'https://www.servicenow.com/products/discovery.html',
           description: 'Learn about automated infrastructure discovery'
         },
         {
           type: 'datasheet',
           title: 'Cloud Observability',
-          url: 'https://www.servicenow.com/products/observability/',
+          url: 'https://www.servicenow.com/products/observability.html',
           description: 'Cloud-native monitoring and observability features'
         },
         {
@@ -110,19 +110,19 @@ export const generateRecommendations = (data: AssessmentData): ServiceNowModule[
         {
           type: 'documentation',
           title: 'HR Service Delivery Overview',
-          url: 'https://www.servicenow.com/products/hr-service-delivery/',
+          url: 'https://www.servicenow.com/products/hr-service-delivery.html',
           description: 'Transform HR service delivery with digital workflows'
         },
         {
           type: 'demo',
           title: 'Employee Workflows',
-          url: 'https://www.servicenow.com/workflows/employee-workflows/',
+          url: 'https://www.servicenow.com/workflows/employee-workflows.html',
           description: 'See the employee self-service experience in action'
         },
         {
           type: 'datasheet',
           title: 'HR Solutions',
-          url: 'https://www.servicenow.com/solutions/hr/',
+          url: 'https://www.servicenow.com/solutions/hr.html',
           description: 'Technical details and HR-specific capabilities'
         }
       ]
@@ -147,19 +147,19 @@ export const generateRecommendations = (data: AssessmentData): ServiceNowModule[
         {
           type: 'documentation',
           title: 'Security Operations Overview',
-          url: 'https://www.servicenow.com/products/security-operations/',
+          url: 'https://www.servicenow.com/products/security-operations.html',
           description: 'Comprehensive security operations capabilities'
         },
         {
           type: 'demo',
           title: 'Vulnerability Response',
-          url: 'https://www.servicenow.com/products/vulnerability-response/',
+          url: 'https://www.servicenow.com/products/vulnerability-response.html',
           description: 'See automated vulnerability management in action'
         },
         {
           type: 'datasheet',
           title: 'Security Incident Response',
-          url: 'https://www.servicenow.com/products/security-incident-response/',
+          url: 'https://www.servicenow.com/products/security-incident-response.html',
           description: 'Automated security incident response workflows'
         }
       ]
@@ -184,13 +184,13 @@ export const generateRecommendations = (data: AssessmentData): ServiceNowModule[
         {
           type: 'documentation',
           title: 'Customer Service Management',
-          url: 'https://www.servicenow.com/products/customer-service-management/',
+          url: 'https://www.servicenow.com/products/customer-service-management.html',
           description: 'Transform customer service operations'
         },
         {
           type: 'demo',
           title: 'Customer Workflows',
-          url: 'https://www.servicenow.com/workflows/customer-workflows/',
+          url: 'https://www.servicenow.com/workflows/customer-workflows.html',
           description: 'Experience customer self-service capabilities'
         }
       ]
@@ -215,13 +215,13 @@ export const generateRecommendations = (data: AssessmentData): ServiceNowModule[
         {
           type: 'documentation',
           title: 'Governance Risk Compliance',
-          url: 'https://www.servicenow.com/products/governance-risk-compliance/',
+          url: 'https://www.servicenow.com/products/governance-risk-compliance.html',
           description: 'Integrated GRC platform capabilities'
         },
         {
           type: 'datasheet',
           title: 'Risk Management',
-          url: 'https://www.servicenow.com/products/risk-management/',
+          url: 'https://www.servicenow.com/products/risk-management.html',
           description: 'Enterprise risk management features'
         }
       ]

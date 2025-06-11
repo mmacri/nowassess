@@ -133,12 +133,12 @@ export function RecommendationCard({ module, index }: RecommendationCardProps) {
               )}
             </div>
 
-            {/* Updated ServiceNow Links with real URLs */}
+            {/* Working ServiceNow Links */}
             <div className="bg-servicenow-primary/5 rounded-lg p-4">
               <h5 className="font-medium text-gray-900 mb-3">Next Steps</h5>
               <div className="space-y-2 text-sm">
                 <a 
-                  href="https://www.servicenow.com/contact/"
+                  href="https://www.servicenow.com/lpdem/demonow-digital-workflows.html"
                   target="_blank"
                   rel="noopener noreferrer"
                   className="flex items-center text-servicenow-primary hover:underline"
@@ -147,7 +147,7 @@ export function RecommendationCard({ module, index }: RecommendationCardProps) {
                   Schedule a Demo
                 </a>
                 <a 
-                  href="https://nowlearning.servicenow.com/"
+                  href="https://nowlearning.service-now.com/lxp"
                   target="_blank"
                   rel="noopener noreferrer"
                   className="flex items-center text-servicenow-primary hover:underline"
