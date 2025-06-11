@@ -1,3 +1,4 @@
+
 import type { Config } from "tailwindcss";
 
 export default {
@@ -61,7 +62,12 @@ export default {
 					'accent-foreground': 'hsl(var(--sidebar-accent-foreground))',
 					border: 'hsl(var(--sidebar-border))',
 					ring: 'hsl(var(--sidebar-ring))'
-				}
+				},
+				// ServiceNow specific colors using semantic naming
+				'servicenow-primary': 'hsl(var(--servicenow-green))',
+				'servicenow-blue': 'hsl(var(--servicenow-blue))',
+				'servicenow-navy': 'hsl(var(--servicenow-navy))',
+				'servicenow-gray': 'hsl(var(--servicenow-gray))'
 			},
 			borderRadius: {
 				lg: 'var(--radius)',

@@ -14,21 +14,21 @@ export function MetricsSummary({ recommendations, companyName }: MetricsSummaryP
 
   return (
     <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mt-8 max-w-4xl mx-auto">
-      <div className="bg-white rounded-lg p-4 shadow-sm">
+      <div className="servicenow-card p-6 text-center">
         <div className="text-2xl font-bold text-servicenow-primary">{recommendations.length}</div>
-        <div className="text-sm text-gray-600">Recommended Modules</div>
+        <div className="text-sm text-muted-foreground">Recommended Modules</div>
       </div>
-      <div className="bg-white rounded-lg p-4 shadow-sm">
-        <div className="text-2xl font-bold text-green-600">{totalPotentialROI}%+</div>
-        <div className="text-sm text-gray-600">Potential ROI</div>
+      <div className="servicenow-card p-6 text-center">
+        <div className="text-2xl font-bold text-servicenow-blue">{totalPotentialROI}%+</div>
+        <div className="text-sm text-muted-foreground">Potential ROI</div>
       </div>
-      <div className="bg-white rounded-lg p-4 shadow-sm">
-        <div className="text-2xl font-bold text-blue-600">6-12</div>
-        <div className="text-sm text-gray-600">Months to Value</div>
+      <div className="servicenow-card p-6 text-center">
+        <div className="text-2xl font-bold text-servicenow-primary">6-12</div>
+        <div className="text-sm text-muted-foreground">Months to Value</div>
       </div>
-      <div className="bg-white rounded-lg p-4 shadow-sm">
-        <div className="text-2xl font-bold text-purple-600">40%+</div>
-        <div className="text-sm text-gray-600">Efficiency Gain</div>
+      <div className="servicenow-card p-6 text-center">
+        <div className="text-2xl font-bold text-servicenow-blue">40%+</div>
+        <div className="text-sm text-muted-foreground">Efficiency Gain</div>
       </div>
     </div>
   );

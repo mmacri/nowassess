@@ -21,14 +21,14 @@ export function NavigationProgress({ currentPhase, onReset }: NavigationProgress
   const progress = ((currentStep - 1) / (phases.length - 1)) * 100;
 
   return (
-    <div className="fixed top-0 left-0 right-0 z-50 bg-white/95 backdrop-blur-sm border-b border-gray-200">
+    <div className="fixed top-0 left-0 right-0 z-50 bg-background/95 backdrop-blur-sm border-b border-border">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-16">
           <Button
             variant="ghost"
             size="sm"
             onClick={onReset}
-            className="text-gray-600 hover:text-gray-900 hover:bg-gray-100 font-medium"
+            className="text-muted-foreground hover:text-foreground hover:bg-muted font-medium"
           >
             <ArrowLeft className="w-4 h-4 mr-2" />
             Start Over
@@ -36,10 +36,10 @@ export function NavigationProgress({ currentPhase, onReset }: NavigationProgress
           
           <div className="flex-1 max-w-2xl mx-8">
             <div className="flex items-center justify-between mb-2">
-              <div className="text-sm font-medium text-gray-600">
+              <div className="text-sm font-medium text-muted-foreground">
                 Step {currentStep} of {phases.length}
               </div>
-              <div className="text-sm text-gray-500">
+              <div className="text-sm text-muted-foreground">
                 {phases.find(p => p.id === currentPhase)?.label}
               </div>
             </div>
