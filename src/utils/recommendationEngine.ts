@@ -1,28 +1,27 @@
 
-import { AssessmentData, ServiceNowModule, AssessmentAnswers } from "@/types/assessment";
+import { AssessmentData, ServiceNowModule } from "@/types/assessment";
 
 export function generateRecommendations(assessmentData: AssessmentData): ServiceNowModule[] {
   console.log('Generating recommendations for:', assessmentData);
   
-  const answers: Partial<AssessmentAnswers> = assessmentData.answers || {};
+  const answers = assessmentData.answers || {};
   const challenges = answers.businessChallenges || [];
   const teamSize = answers.teamSize || '';
   const budget = answers.budget || '';
-  const timeline = answers.timeline || '';
   
   const recommendations: ServiceNowModule[] = [];
   
-  // Core ITSM - Always recommended as foundation
+  // Always recommend ITSM as it's foundational
   recommendations.push({
     id: 'itsm',
     name: 'IT Service Management (ITSM)',
     description: 'Streamline IT service delivery with automated workflows, incident management, and service catalog capabilities.',
     benefits: [
-      'Reduce incident resolution time by 40-60%',
+      'Reduce incident resolution time by 40%',
       'Improve user satisfaction scores',
       'Automate routine IT tasks',
       'Centralized service catalog',
-      'Enhanced change management'
+      'Better SLA management'
     ],
     implementationTime: '3-4 months',
     complexity: 'Medium',
@@ -32,203 +31,118 @@ export function generateRecommendations(assessmentData: AssessmentData): Service
     resources: [
       {
         title: 'ITSM Implementation Guide',
-        description: 'Complete guide to implementing ITSM',
-        url: 'https://www.servicenow.com/products/itsm/',
+        description: 'Step-by-step guide for ITSM deployment',
+        url: 'https://docs.servicenow.com/bundle/utah-it-service-management/page/product/service-catalog-management/concept/c_ServiceCatalogManagement.html',
         type: 'documentation'
       }
     ]
   });
-
-  // HR Service Delivery - if employee productivity is a concern
-  if (challenges.includes('Employee productivity concerns') || 
-      challenges.includes('Manual processes and inefficiencies')) {
+  
+  // Security-focused recommendations
+  if (challenges.includes('Security vulnerabilities and threats') || 
+      challenges.includes('Compliance and risk management issues')) {
     recommendations.push({
-      id: 'hrsd',
-      name: 'HR Service Delivery',
-      description: 'Transform HR processes with self-service capabilities, automated workflows, and case management.',
+      id: 'security-operations',
+      name: 'Security Operations (SecOps)',
+      description: 'Enhance security incident response and vulnerability management with integrated security operations.',
       benefits: [
-        'Reduce HR case resolution time by 50%',
-        'Employee self-service portal',
-        'Automated onboarding/offboarding',
-        'Improved employee experience',
-        'HR analytics and reporting'
+        'Faster security incident response',
+        'Improved threat detection',
+        'Automated vulnerability management',
+        'Better compliance reporting'
       ],
-      implementationTime: '2-3 months',
-      complexity: 'Low',
+      implementationTime: '4-6 months',
+      complexity: 'High',
       priority: 2,
-      dependencies: ['ITSM Core'],
-      roi: '180% in 18 months',
-      resources: [
-        {
-          title: 'HR Service Delivery Overview',
-          description: 'Learn about HR automation capabilities',
-          url: 'https://www.servicenow.com/products/hr-service-delivery/',
-          type: 'documentation'
-        }
-      ]
+      dependencies: ['ITSM'],
+      roi: '300% in 18 months',
+      resources: []
     });
   }
-
-  // Customer Service Management - if customer service issues exist
-  if (challenges.includes('Customer service quality issues') ||
-      challenges.includes('Inconsistent service delivery')) {
+  
+  // Customer service recommendations
+  if (challenges.includes('Customer service quality issues')) {
     recommendations.push({
-      id: 'csm',
-      name: 'Customer Service Management',
-      description: 'Deliver exceptional customer experiences with omnichannel support and intelligent case routing.',
+      id: 'customer-service',
+      name: 'Customer Service Management (CSM)',
+      description: 'Improve customer experience with comprehensive case management and omnichannel support.',
       benefits: [
-        'Improve customer satisfaction by 35%',
-        'Omnichannel support capabilities',
-        'Intelligent case routing',
-        'Customer self-service portal',
-        'Real-time service analytics'
+        'Reduce customer resolution time',
+        'Improve customer satisfaction',
+        'Unified customer view',
+        'Omnichannel support'
       ],
       implementationTime: '4-5 months',
       complexity: 'Medium',
       priority: 2,
-      dependencies: ['ITSM Core'],
+      dependencies: ['ITSM'],
       roi: '200% in first year',
-      resources: [
-        {
-          title: 'Customer Service Management',
-          description: 'Transform customer service delivery',
-          url: 'https://www.servicenow.com/products/customer-service-management/',
-          type: 'documentation'
-        }
-      ]
+      resources: []
     });
   }
-
-  // Security Operations - if security concerns exist
-  if (challenges.includes('Security vulnerabilities and threats')) {
+  
+  // HR Service Delivery for employee productivity
+  if (challenges.includes('Employee productivity concerns')) {
     recommendations.push({
-      id: 'secops',
-      name: 'Security Operations',
-      description: 'Strengthen security posture with integrated vulnerability management and incident response.',
+      id: 'hrsd',
+      name: 'HR Service Delivery (HRSD)',
+      description: 'Streamline HR processes and improve employee experience with self-service capabilities.',
       benefits: [
-        'Faster threat detection and response',
-        'Integrated vulnerability management',
-        'Automated security workflows',
-        'Compliance reporting',
-        'Risk assessment automation'
+        'Reduce HR case resolution time',
+        'Improve employee satisfaction',
+        'Automate HR processes',
+        'Better employee onboarding'
       ],
-      implementationTime: '4-6 months',
-      complexity: 'High',
-      priority: 1,
-      dependencies: ['ITSM Core'],
-      roi: '300% in first year',
-      resources: [
-        {
-          title: 'Security Operations Center',
-          description: 'Modern security operations platform',
-          url: 'https://www.servicenow.com/products/security-operations/',
-          type: 'documentation'
-        }
-      ]
-    });
-  }
-
-  // GRC - if compliance issues exist
-  if (challenges.includes('Compliance and risk management issues')) {
-    recommendations.push({
-      id: 'grc',
-      name: 'Governance, Risk & Compliance (GRC)',
-      description: 'Manage risk and compliance with integrated governance frameworks and automated assessments.',
-      benefits: [
-        'Centralized risk management',
-        'Automated compliance reporting',
-        'Policy management',
-        'Audit preparation automation',
-        'Risk visualization dashboards'
-      ],
-      implementationTime: '5-6 months',
-      complexity: 'High',
-      priority: 2,
-      dependencies: ['ITSM Core'],
-      roi: '220% in 18 months',
-      resources: [
-        {
-          title: 'GRC Solutions',
-          description: 'Governance, risk and compliance management',
-          url: 'https://www.servicenow.com/products/governance-risk-compliance/',
-          type: 'documentation'
-        }
-      ]
-    });
-  }
-
-  // ITOM - for larger organizations with infrastructure challenges
-  if (challenges.includes('IT infrastructure management challenges') ||
-      (teamSize.includes('Large') || teamSize.includes('Enterprise'))) {
-    recommendations.push({
-      id: 'itom',
-      name: 'IT Operations Management (ITOM)',
-      description: 'Gain visibility and control over your IT infrastructure with automated discovery and monitoring.',
-      benefits: [
-        'Complete infrastructure visibility',
-        'Automated service mapping',
-        'Proactive issue detection',
-        'Capacity planning optimization',
-        'Reduced downtime by 45%'
-      ],
-      implementationTime: '6-8 months',
-      complexity: 'High',
+      implementationTime: '3-4 months',
+      complexity: 'Medium',
       priority: 3,
-      dependencies: ['ITSM Core'],
-      roi: '280% in first year',
-      resources: [
-        {
-          title: 'IT Operations Management',
-          description: 'Comprehensive ITOM capabilities',
-          url: 'https://www.servicenow.com/products/it-operations-management/',
-          type: 'documentation'
-        }
-      ]
+      dependencies: [],
+      roi: '180% in first year',
+      resources: []
     });
   }
-
-  // Performance Analytics - for data-driven organizations
-  if (challenges.includes('Poor visibility into operations') ||
-      !challenges.includes('Mostly manual with limited automation')) {
+  
+  // Process automation for manual processes
+  if (challenges.includes('Manual processes and inefficiencies')) {
     recommendations.push({
-      id: 'performance_analytics',
-      name: 'Performance Analytics',
-      description: 'Transform data into actionable insights with advanced analytics and reporting capabilities.',
+      id: 'process-automation',
+      name: 'Process Automation',
+      description: 'Automate repetitive tasks and workflows to improve efficiency and reduce errors.',
       benefits: [
-        'Real-time performance dashboards',
-        'Predictive analytics capabilities',
-        'Custom KPI tracking',
-        'Executive reporting automation',
-        'Data-driven decision making'
+        'Reduce manual work by 70%',
+        'Improve process consistency',
+        'Faster task completion',
+        'Reduced human errors'
       ],
       implementationTime: '2-3 months',
       complexity: 'Low',
-      priority: 3,
-      dependencies: ['ITSM Core'],
-      roi: '150% in first year',
-      resources: [
-        {
-          title: 'Performance Analytics',
-          description: 'Analytics and reporting platform',
-          url: 'https://www.servicenow.com/products/performance-analytics/',
-          type: 'documentation'
-        }
-      ]
+      priority: 2,
+      dependencies: [],
+      roi: '400% in first year',
+      resources: []
     });
   }
-
-  // Sort by priority
-  recommendations.sort((a, b) => a.priority - b.priority);
   
-  // Limit recommendations based on budget and timeline
-  let maxRecommendations = 6;
-  if (budget.includes('Less than $50K')) {
-    maxRecommendations = 2;
-  } else if (budget.includes('$50K - $100K')) {
-    maxRecommendations = 3;
-  } else if (timeline.includes('Immediate')) {
-    maxRecommendations = 3;
+  // Governance, Risk, and Compliance
+  if (challenges.includes('Compliance and risk management issues')) {
+    recommendations.push({
+      id: 'grc',
+      name: 'Governance, Risk, and Compliance (GRC)',
+      description: 'Manage enterprise risk, ensure compliance, and maintain governance frameworks.',
+      benefits: [
+        'Better risk visibility',
+        'Automated compliance reporting',
+        'Improved audit preparation',
+        'Risk mitigation strategies'
+      ],
+      implementationTime: '5-6 months',
+      complexity: 'High',
+      priority: 3,
+      dependencies: ['ITSM'],
+      roi: '220% in 18 months',
+      resources: []
+    });
   }
   
-  return recommendations.slice(0, maxRecommendations);
+  return recommendations.slice(0, 4); // Return top 4 recommendations
 }

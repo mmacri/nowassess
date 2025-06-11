@@ -1,58 +1,82 @@
 
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { BookOpen, Download, Users, Target } from "lucide-react";
-
 export function AdditionalResources() {
   return (
-    <Card className="mb-8 shadow-lg border-0 servicenow-card">
-      <CardHeader>
-        <CardTitle className="text-xl text-foreground flex items-center">
-          <BookOpen className="w-6 h-6 mr-2 text-servicenow-primary" />
-          Additional ServiceNow Resources
-        </CardTitle>
-      </CardHeader>
-      <CardContent>
-        <div className="grid md:grid-cols-3 gap-4">
-          <a 
-            href="https://www.servicenow.com/products/platform-overview/"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="p-4 bg-muted rounded-lg hover:bg-muted/80 transition-colors"
-          >
-            <div className="flex items-center mb-2">
-              <Download className="w-5 h-5 mr-2 text-servicenow-primary" />
-              <span className="font-medium text-foreground">Platform Overview</span>
-            </div>
-            <p className="text-sm text-muted-foreground">Complete guide to the ServiceNow Platform</p>
-          </a>
-          
-          <a 
-            href="https://www.servicenow.com/customers/"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="p-4 bg-muted rounded-lg hover:bg-muted/80 transition-colors"
-          >
-            <div className="flex items-center mb-2">
-              <Users className="w-5 h-5 mr-2 text-servicenow-primary" />
-              <span className="font-medium text-foreground">Customer Success Stories</span>
-            </div>
-            <p className="text-sm text-muted-foreground">Real-world implementations and results</p>
-          </a>
-          
-          <a 
-            href="https://www.servicenow.com/services/"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="p-4 bg-muted rounded-lg hover:bg-muted/80 transition-colors"
-          >
-            <div className="flex items-center mb-2">
-              <Target className="w-5 h-5 mr-2 text-servicenow-primary" />
-              <span className="font-medium text-foreground">Professional Services</span>
-            </div>
-            <p className="text-sm text-muted-foreground">Expert implementation and consulting services</p>
-          </a>
+    <div className="bg-white rounded-lg p-8 shadow-sm border border-gray-200 mb-12">
+      <h3 className="text-xl font-semibold text-gray-900 mb-6">Additional Resources</h3>
+      
+      <div className="grid md:grid-cols-2 gap-6">
+        <div>
+          <h4 className="font-medium text-gray-900 mb-3">Documentation & Guides</h4>
+          <ul className="space-y-2">
+            <li>
+              <a 
+                href="https://docs.servicenow.com/" 
+                target="_blank" 
+                rel="noopener noreferrer"
+                className="text-teal-600 hover:text-teal-700 text-sm"
+              >
+                ServiceNow Product Documentation
+              </a>
+            </li>
+            <li>
+              <a 
+                href="https://nowlearning.servicenow.com/" 
+                target="_blank" 
+                rel="noopener noreferrer"
+                className="text-teal-600 hover:text-teal-700 text-sm"
+              >
+                ServiceNow Learning Platform
+              </a>
+            </li>
+            <li>
+              <a 
+                href="https://community.servicenow.com/" 
+                target="_blank" 
+                rel="noopener noreferrer"
+                className="text-teal-600 hover:text-teal-700 text-sm"
+              >
+                ServiceNow Community
+              </a>
+            </li>
+          </ul>
         </div>
-      </CardContent>
-    </Card>
+        
+        <div>
+          <h4 className="font-medium text-gray-900 mb-3">Get Started</h4>
+          <ul className="space-y-2">
+            <li>
+              <a 
+                href="https://www.servicenow.com/contact/" 
+                target="_blank" 
+                rel="noopener noreferrer"
+                className="text-teal-600 hover:text-teal-700 text-sm"
+              >
+                Contact ServiceNow Sales
+              </a>
+            </li>
+            <li>
+              <a 
+                href="https://www.servicenow.com/demo/" 
+                target="_blank" 
+                rel="noopener noreferrer"
+                className="text-teal-600 hover:text-teal-700 text-sm"
+              >
+                Schedule a Demo
+              </a>
+            </li>
+            <li>
+              <a 
+                href="https://www.servicenow.com/services/" 
+                target="_blank" 
+                rel="noopener noreferrer"
+                className="text-teal-600 hover:text-teal-700 text-sm"
+              >
+                Professional Services
+              </a>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
   );
 }
