@@ -1,20 +1,128 @@
 
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <link rel="icon" type="image/svg+xml" href="/favicon.ico" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>ServiceNow Solution Advisor - Business Assessment Tool</title>
-    <meta name="description" content="Discover the perfect ServiceNow modules for your business with our intelligent assessment tool. Get personalized recommendations and implementation roadmaps." />
+    <meta name="description" content="Discover the perfect ServiceNow modules for your business with our intelligent assessment tool. Get personalized recommendations and implementation roadmaps.">
     
     <!-- Inter Font -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-  </head>
-  <body>
-    <div id="root"></div>
-    <script type="module" src="/src/main.tsx"></script>
-  </body>
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body class="min-h-screen bg-gray-100">
+    <!-- Header -->
+    <header class="bg-gray-700 px-6 py-4">
+        <div class="max-w-7xl mx-auto flex items-center justify-between">
+            <div class="flex items-center space-x-3">
+                <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 15a4 4 0 004 4h9a5 5 0 10-.1-9.999 5.002 5.002 0 10-9.78 2.096A4.4 4.4 0 003 15z"></path>
+                </svg>
+                <h1 class="text-xl font-semibold text-white">ServiceNow Solution Advisor</h1>
+            </div>
+            <div class="text-sm text-gray-300">
+                Powered by AI-driven recommendations
+            </div>
+        </div>
+    </header>
+
+    <!-- Hero Section -->
+    <div class="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100">
+        <div class="container mx-auto px-4 max-w-6xl py-16">
+            <div class="text-center mb-16 space-y-6">
+                <div class="inline-flex items-center px-4 py-2 rounded-full bg-teal-100 text-teal-700 text-sm font-medium border border-teal-200">
+                    <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path>
+                    </svg>
+                    AI-Powered ServiceNow Assessment
+                </div>
+                
+                <h1 class="text-5xl md:text-7xl font-bold text-gray-900 leading-tight">
+                    Discover Your Perfect
+                    <span class="text-teal-600 block"> ServiceNow Solution</span>
+                </h1>
+                
+                <p class="text-xl text-gray-600 max-w-3xl mx-auto leading-relaxed">
+                    Take our intelligent business assessment to receive personalized ServiceNow module 
+                    recommendations, implementation roadmaps, and ROI projections tailored to your organization.
+                </p>
+
+                <div class="flex flex-col sm:flex-row items-center justify-center gap-4 mt-8">
+                    <button 
+                        onclick="startAssessment()"
+                        class="px-8 py-4 bg-teal-600 hover:bg-teal-700 text-white font-semibold text-lg rounded-lg transition-colors inline-flex items-center"
+                    >
+                        Start Your Assessment
+                        <svg class="w-5 h-5 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+                        </svg>
+                    </button>
+                    
+                    <div class="text-sm text-gray-500">
+                        Takes 5-7 minutes • Get instant results
+                    </div>
+                </div>
+            </div>
+
+            <!-- Features Grid -->
+            <div class="grid md:grid-cols-3 gap-8 mt-20">
+                <div class="text-center p-6 bg-white rounded-lg shadow-sm border border-gray-200">
+                    <div class="w-12 h-12 mx-auto mb-4 bg-teal-100 rounded-full flex items-center justify-center">
+                        <svg class="w-6 h-6 text-teal-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                        </svg>
+                    </div>
+                    <h3 class="text-lg font-semibold text-gray-900 mb-2">Personalized Recommendations</h3>
+                    <p class="text-gray-600">
+                        Get tailored ServiceNow module suggestions based on your specific business needs and challenges.
+                    </p>
+                </div>
+                
+                <div class="text-center p-6 bg-white rounded-lg shadow-sm border border-gray-200">
+                    <div class="w-12 h-12 mx-auto mb-4 bg-blue-100 rounded-full flex items-center justify-center">
+                        <svg class="w-6 h-6 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197m13.5-9a2.5 2.5 0 11-5 0 2.5 2.5 0 015 0z"></path>
+                        </svg>
+                    </div>
+                    <h3 class="text-lg font-semibold text-gray-900 mb-2">Implementation Roadmap</h3>
+                    <p class="text-gray-600">
+                        Receive a detailed timeline and resource plan for implementing ServiceNow in your organization.
+                    </p>
+                </div>
+                
+                <div class="text-center p-6 bg-white rounded-lg shadow-sm border border-gray-200">
+                    <div class="w-12 h-12 mx-auto mb-4 bg-green-100 rounded-full flex items-center justify-center">
+                        <svg class="w-6 h-6 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                        </svg>
+                    </div>
+                    <h3 class="text-lg font-semibold text-gray-900 mb-2">ROI Projections</h3>
+                    <p class="text-gray-600">
+                        Understand the potential return on investment and business value of your ServiceNow implementation.
+                    </p>
+                </div>
+            </div>
+
+            <!-- Trust Indicators -->
+            <div class="mt-20 text-center">
+                <p class="text-gray-500 mb-6">Trusted by organizations worldwide</p>
+                <div class="flex items-center justify-center space-x-8 opacity-60">
+                    <div class="text-2xl font-bold text-gray-400">Enterprise</div>
+                    <div class="text-2xl font-bold text-gray-400">Mid-Market</div>
+                    <div class="text-2xl font-bold text-gray-400">SMB</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="app.js"></script>
+</body>
 </html>
