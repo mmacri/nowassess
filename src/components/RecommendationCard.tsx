@@ -133,7 +133,7 @@ export function RecommendationCard({ module, index }: RecommendationCardProps) {
               )}
             </div>
 
-            {/* Additional ServiceNow Links */}
+            {/* Updated ServiceNow Links with real URLs */}
             <div className="bg-servicenow-primary/5 rounded-lg p-4">
               <h5 className="font-medium text-gray-900 mb-3">Next Steps</h5>
               <div className="space-y-2 text-sm">

@@ -30,19 +30,19 @@ export const generateRecommendations = (data: AssessmentData): ServiceNowModule[
         {
           type: 'demo',
           title: 'ITSM Interactive Demo',
-          url: 'https://www.servicenow.com/products/itsm/demo/',
+          url: 'https://www.servicenow.com/products/itsm/',
           description: 'Experience ITSM capabilities with hands-on demo'
         },
         {
           type: 'datasheet',
-          title: 'ITSM Datasheet',
-          url: 'https://www.servicenow.com/content/dam/servicenow-assets/public/en-us/doc-type/data-sheet/ds-it-service-management.pdf',
+          title: 'ITSM Solution Brief',
+          url: 'https://www.servicenow.com/solutions/it-service-management/',
           description: 'Technical specifications and feature details'
         },
         {
           type: 'training',
-          title: 'ServiceNow Learning Portal - ITSM',
-          url: 'https://nowlearning.servicenow.com/lxp',
+          title: 'ServiceNow Learning Portal',
+          url: 'https://nowlearning.servicenow.com/',
           description: 'Comprehensive training modules for ITSM implementation'
         }
       ]
@@ -73,19 +73,19 @@ export const generateRecommendations = (data: AssessmentData): ServiceNowModule[
         {
           type: 'video',
           title: 'ITOM Discovery and Service Mapping',
-          url: 'https://www.servicenow.com/products/itom/discovery/',
+          url: 'https://www.servicenow.com/products/discovery/',
           description: 'Learn about automated infrastructure discovery'
         },
         {
           type: 'datasheet',
-          title: 'Cloud Observability Datasheet',
-          url: 'https://www.servicenow.com/products/itom/cloud-observability/',
+          title: 'Cloud Observability',
+          url: 'https://www.servicenow.com/products/observability/',
           description: 'Cloud-native monitoring and observability features'
         },
         {
           type: 'community',
-          title: 'ITOM Community',
-          url: 'https://community.servicenow.com/community?id=community_forum&sys_id=7c9b6a5fdb9cdbc01dcaf3231f9619a1',
+          title: 'ServiceNow Community',
+          url: 'https://community.servicenow.com/',
           description: 'Connect with ITOM experts and practitioners'
         }
       ]
@@ -115,14 +115,14 @@ export const generateRecommendations = (data: AssessmentData): ServiceNowModule[
         },
         {
           type: 'demo',
-          title: 'Employee Center Demo',
-          url: 'https://www.servicenow.com/products/employee-workflows/',
+          title: 'Employee Workflows',
+          url: 'https://www.servicenow.com/workflows/employee-workflows/',
           description: 'See the employee self-service experience in action'
         },
         {
           type: 'datasheet',
-          title: 'HR Service Delivery Datasheet',
-          url: 'https://www.servicenow.com/content/dam/servicenow-assets/public/en-us/doc-type/data-sheet/ds-hr-service-delivery.pdf',
+          title: 'HR Solutions',
+          url: 'https://www.servicenow.com/solutions/hr/',
           description: 'Technical details and HR-specific capabilities'
         }
       ]
@@ -152,7 +152,7 @@ export const generateRecommendations = (data: AssessmentData): ServiceNowModule[
         },
         {
           type: 'demo',
-          title: 'Vulnerability Response Demo',
+          title: 'Vulnerability Response',
           url: 'https://www.servicenow.com/products/vulnerability-response/',
           description: 'See automated vulnerability management in action'
         },
@@ -189,8 +189,8 @@ export const generateRecommendations = (data: AssessmentData): ServiceNowModule[
         },
         {
           type: 'demo',
-          title: 'Customer Service Portal Demo',
-          url: 'https://www.servicenow.com/products/customer-workflows/',
+          title: 'Customer Workflows',
+          url: 'https://www.servicenow.com/workflows/customer-workflows/',
           description: 'Experience customer self-service capabilities'
         }
       ]
@@ -220,7 +220,7 @@ export const generateRecommendations = (data: AssessmentData): ServiceNowModule[
         },
         {
           type: 'datasheet',
-          title: 'Risk Management Datasheet',
+          title: 'Risk Management',
           url: 'https://www.servicenow.com/products/risk-management/',
           description: 'Enterprise risk management features'
         }

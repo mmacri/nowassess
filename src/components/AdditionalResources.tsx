@@ -14,7 +14,7 @@ export function AdditionalResources() {
       <CardContent>
         <div className="grid md:grid-cols-3 gap-4">
           <a 
-            href="https://www.servicenow.com/lpebk/platform-overview.html"
+            href="https://www.servicenow.com/products/platform-overview/"
             target="_blank"
             rel="noopener noreferrer"
             className="p-4 bg-muted rounded-lg hover:bg-muted/80 transition-colors"
