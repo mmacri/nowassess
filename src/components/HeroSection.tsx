@@ -1,6 +1,6 @@
 
 import { Button } from "@/components/ui/button";
-import { Lightbulb, BarChart3, TrendingUp, Cloud } from "lucide-react";
+import { Lightbulb, BarChart3, TrendingUp } from "lucide-react";
 
 interface HeroSectionProps {
   onComplete: () => void;
@@ -8,20 +8,7 @@ interface HeroSectionProps {
 
 export function HeroSection({ onComplete }: HeroSectionProps) {
   return (
-    <div className="min-h-screen bg-gray-50">
-      {/* Header */}
-      <header className="bg-gray-700 px-6 py-4">
-        <div className="max-w-7xl mx-auto flex items-center justify-between">
-          <div className="flex items-center space-x-3">
-            <Cloud className="w-8 h-8 text-white" />
-            <h1 className="text-xl font-semibold text-white">ServiceNow Solution Advisor</h1>
-          </div>
-          <div className="text-sm text-gray-300">
-            Powered by AI-driven recommendations
-          </div>
-        </div>
-      </header>
-
+    <div className="min-h-screen bg-gray-100">
       {/* Step Navigation */}
       <div className="bg-white border-b border-gray-200 px-6 py-6">
         <div className="max-w-7xl mx-auto">
@@ -64,7 +51,7 @@ export function HeroSection({ onComplete }: HeroSectionProps) {
 
         {/* Three Column Feature Section */}
         <div className="grid md:grid-cols-3 gap-12 mb-20">
-          <div className="text-center bg-white rounded-lg p-8 shadow-sm">
+          <div className="text-center bg-white rounded-lg p-8 shadow-sm border border-gray-200">
             <div className="w-16 h-16 bg-teal-100 rounded-full flex items-center justify-center mx-auto mb-6">
               <Lightbulb className="w-8 h-8 text-teal-600" />
             </div>
@@ -76,7 +63,7 @@ export function HeroSection({ onComplete }: HeroSectionProps) {
             </p>
           </div>
           
-          <div className="text-center bg-white rounded-lg p-8 shadow-sm">
+          <div className="text-center bg-white rounded-lg p-8 shadow-sm border border-gray-200">
             <div className="w-16 h-16 bg-teal-100 rounded-full flex items-center justify-center mx-auto mb-6">
               <BarChart3 className="w-8 h-8 text-teal-600" />
             </div>
@@ -88,7 +75,7 @@ export function HeroSection({ onComplete }: HeroSectionProps) {
             </p>
           </div>
           
-          <div className="text-center bg-white rounded-lg p-8 shadow-sm">
+          <div className="text-center bg-white rounded-lg p-8 shadow-sm border border-gray-200">
             <div className="w-16 h-16 bg-teal-100 rounded-full flex items-center justify-center mx-auto mb-6">
               <TrendingUp className="w-8 h-8 text-teal-600" />
             </div>

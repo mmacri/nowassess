@@ -59,9 +59,9 @@ export function RecommendationsSection({ assessmentData, onComplete }: Recommend
 
   if (isLoading) {
     return (
-      <div className="min-h-screen pt-32 pb-16 flex items-center justify-center bg-gradient-to-br from-gray-50 to-blue-50">
-        <Card className="max-w-md mx-auto text-center p-8 shadow-xl border-0">
-          <div className="animate-spin w-8 h-8 border-4 border-servicenow-primary border-t-transparent rounded-full mx-auto mb-4"></div>
+      <div className="min-h-screen pt-32 pb-16 flex items-center justify-center bg-gray-100">
+        <Card className="max-w-md mx-auto text-center p-8 shadow-sm border border-gray-200 bg-white">
+          <div className="animate-spin w-8 h-8 border-4 border-teal-600 border-t-transparent rounded-full mx-auto mb-4"></div>
           <h3 className="text-lg font-semibold mb-2 text-gray-900">Analyzing Your Requirements</h3>
           <p className="text-gray-600">
             Our intelligent engine is processing your assessment to generate personalized recommendations...
@@ -75,17 +75,17 @@ export function RecommendationsSection({ assessmentData, onComplete }: Recommend
   }
 
   return (
-    <div className="min-h-screen pt-32 pb-16 bg-gradient-to-br from-gray-50 to-blue-50">
-      <div className="container mx-auto px-4 max-w-6xl">
+    <div className="bg-gray-100">
+      <div className="container mx-auto px-4 max-w-6xl py-16">
         <div className="text-center mb-12 space-y-4">
-          <div className="inline-flex items-center px-4 py-2 rounded-full bg-green-100 text-green-700 text-sm font-medium shadow-sm">
+          <div className="inline-flex items-center px-4 py-2 rounded-full bg-green-100 text-green-700 text-sm font-medium border border-green-200">
             <CheckCircle className="w-4 h-4 mr-2" />
             Analysis Complete
           </div>
           
           <h1 className="text-4xl md:text-5xl font-bold text-gray-900">
             Your Personalized 
-            <span className="text-servicenow-primary"> ServiceNow Strategy</span>
+            <span className="text-teal-600"> ServiceNow Strategy</span>
           </h1>
           
           <p className="text-xl text-gray-600 max-w-3xl mx-auto">
@@ -111,13 +111,13 @@ export function RecommendationsSection({ assessmentData, onComplete }: Recommend
 
         <AdditionalResources />
 
-        <div className="text-center bg-white rounded-lg p-8 shadow-lg">
+        <div className="text-center bg-white rounded-lg p-8 shadow-sm border border-gray-200">
           <h3 className="text-xl font-semibold text-gray-900 mb-3">Ready to see your implementation roadmap?</h3>
           <p className="text-gray-600 mb-6">Get a detailed timeline and resource plan for your ServiceNow transformation.</p>
           <Button 
             onClick={onComplete}
             size="lg"
-            className="px-8 bg-servicenow-primary hover:bg-servicenow-primary/90 text-white font-semibold"
+            className="px-8 bg-teal-600 hover:bg-teal-700 text-white font-semibold"
           >
             View Implementation Roadmap
             <ArrowRight className="w-5 h-5 ml-2" />

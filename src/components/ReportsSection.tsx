@@ -2,10 +2,7 @@
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { Textarea } from "@/components/ui/textarea";
-import { Download, Calendar, CheckCircle, FileText, Users, Printer } from "lucide-react";
+import { Download, CheckCircle, FileText, Printer } from "lucide-react";
 import { AssessmentData } from "@/types/assessment";
 import { useToast } from "@/hooks/use-toast";
 
@@ -15,12 +12,6 @@ interface ReportsSectionProps {
 }
 
 export function ReportsSection({ assessmentData, onComplete }: ReportsSectionProps) {
-  const [scheduleForm, setScheduleForm] = useState({
-    preferredDate: '',
-    preferredTime: '',
-    additionalNotes: ''
-  });
-  const [isScheduling, setIsScheduling] = useState(false);
   const { toast } = useToast();
 
   const handleDownloadReport = () => {
@@ -63,86 +54,74 @@ ${JSON.stringify(assessmentData, null, 2)}
     });
   };
 
-  const handleScheduleConsultation = () => {
-    setIsScheduling(true);
-    setTimeout(() => {
-      setIsScheduling(false);
-      toast({
-        title: "Consultation Scheduled",
-        description: "Our ServiceNow expert will contact you soon to confirm your consultation.",
-      });
-      onComplete();
-    }, 2000);
-  };
-
   return (
-    <div className="min-h-screen pt-20 bg-background">
+    <div className="bg-gray-100">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
         <div className="text-center mb-16">
-          <div className="inline-flex items-center px-4 py-2 rounded-full bg-accent text-accent-foreground text-sm font-medium mb-6">
+          <div className="inline-flex items-center px-4 py-2 rounded-full bg-green-100 text-green-700 text-sm font-medium mb-6 border border-green-200">
             <CheckCircle className="w-4 h-4 mr-2" />
             Assessment Complete
           </div>
           
-          <h1 className="text-4xl md:text-6xl font-bold text-foreground mb-6 text-balance">
+          <h1 className="text-4xl md:text-6xl font-bold text-gray-900 mb-6">
             Your ServiceNow Success Package
           </h1>
           
-          <p className="text-xl text-muted-foreground max-w-3xl mx-auto text-balance">
-            Your comprehensive assessment report is ready. Download or print your results and schedule a 
-            personalized consultation to discuss your ServiceNow implementation strategy.
+          <p className="text-xl text-gray-600 max-w-3xl mx-auto">
+            Your comprehensive assessment report is ready. Download or print your results to 
+            discuss your ServiceNow implementation strategy.
           </p>
         </div>
 
         {/* Summary Statistics */}
         <div className="grid grid-cols-2 md:grid-cols-4 gap-6 mb-16">
-          <div className="text-center p-6 servicenow-card">
-            <div className="text-3xl font-bold text-servicenow-primary mb-2">3</div>
-            <div className="text-sm text-muted-foreground">Recommended Modules</div>
+          <div className="text-center p-6 bg-white rounded-lg shadow-sm border border-gray-200">
+            <div className="text-3xl font-bold text-teal-600 mb-2">3</div>
+            <div className="text-sm text-gray-600">Recommended Modules</div>
           </div>
-          <div className="text-center p-6 servicenow-card">
-            <div className="text-3xl font-bold text-servicenow-blue mb-2">250%</div>
-            <div className="text-sm text-muted-foreground">Expected ROI</div>
+          <div className="text-center p-6 bg-white rounded-lg shadow-sm border border-gray-200">
+            <div className="text-3xl font-bold text-teal-600 mb-2">250%</div>
+            <div className="text-sm text-gray-600">Expected ROI</div>
           </div>
-          <div className="text-center p-6 servicenow-card">
-            <div className="text-3xl font-bold text-servicenow-primary mb-2">9-12</div>
-            <div className="text-sm text-muted-foreground">Implementation Months</div>
+          <div className="text-center p-6 bg-white rounded-lg shadow-sm border border-gray-200">
+            <div className="text-3xl font-bold text-teal-600 mb-2">9-12</div>
+            <div className="text-sm text-gray-600">Implementation Months</div>
           </div>
-          <div className="text-center p-6 servicenow-card">
-            <div className="text-3xl font-bold text-servicenow-blue mb-2">40%</div>
-            <div className="text-sm text-muted-foreground">Efficiency Improvement</div>
+          <div className="text-center p-6 bg-white rounded-lg shadow-sm border border-gray-200">
+            <div className="text-3xl font-bold text-teal-600 mb-2">40%</div>
+            <div className="text-sm text-gray-600">Efficiency Improvement</div>
           </div>
         </div>
 
-        <div className="grid lg:grid-cols-2 gap-8 mb-16">
-          {/* Report Download Card */}
-          <Card className="shadow-lg border-0 servicenow-card">
+        {/* Report Download Card */}
+        <div className="max-w-2xl mx-auto">
+          <Card className="shadow-sm border border-gray-200 bg-white">
             <CardHeader className="text-center pb-6">
-              <div className="w-16 h-16 mx-auto mb-4 bg-accent rounded-full flex items-center justify-center">
-                <FileText className="w-8 h-8 text-servicenow-primary" />
+              <div className="w-16 h-16 mx-auto mb-4 bg-teal-100 rounded-full flex items-center justify-center">
+                <FileText className="w-8 h-8 text-teal-600" />
               </div>
-              <CardTitle className="text-2xl font-bold text-foreground">Assessment Report</CardTitle>
-              <p className="text-muted-foreground">
+              <CardTitle className="text-2xl font-bold text-gray-900">Assessment Report</CardTitle>
+              <p className="text-gray-600">
                 Comprehensive analysis with recommendations, roadmap, and ROI projections
               </p>
             </CardHeader>
             
             <CardContent className="space-y-6">
-              <div className="bg-muted rounded-lg p-4 space-y-3">
+              <div className="bg-gray-50 rounded-lg p-4 space-y-3 border border-gray-200">
                 <div className="flex justify-between text-sm">
-                  <span className="text-muted-foreground">Assessment Date:</span>
-                  <span className="font-medium text-foreground">{new Date().toLocaleDateString()}</span>
+                  <span className="text-gray-600">Assessment Date:</span>
+                  <span className="font-medium text-gray-900">{new Date().toLocaleDateString()}</span>
                 </div>
                 <div className="flex justify-between text-sm">
-                  <span className="text-muted-foreground">Report Type:</span>
-                  <span className="font-medium text-foreground">Executive Summary + Implementation Plan</span>
+                  <span className="text-gray-600">Report Type:</span>
+                  <span className="font-medium text-gray-900">Executive Summary + Implementation Plan</span>
                 </div>
               </div>
 
               <div className="space-y-3">
                 <Button 
                   onClick={handleDownloadReport}
-                  className="w-full servicenow-button-primary h-12"
+                  className="w-full h-12 bg-teal-600 hover:bg-teal-700 text-white font-medium"
                 >
                   <Download className="w-5 h-5 mr-2" />
                   Download Report
@@ -151,7 +130,7 @@ ${JSON.stringify(assessmentData, null, 2)}
                 <Button 
                   onClick={handlePrintReport}
                   variant="outline"
-                  className="w-full h-12"
+                  className="w-full h-12 border-gray-300 text-gray-700 hover:bg-gray-50"
                 >
                   <Printer className="w-5 h-5 mr-2" />
                   Print Report
@@ -159,80 +138,10 @@ ${JSON.stringify(assessmentData, null, 2)}
               </div>
             </CardContent>
           </Card>
-
-          {/* Consultation Scheduling Card */}
-          <Card className="shadow-lg border-0 servicenow-card">
-            <CardHeader className="text-center pb-6">
-              <div className="w-16 h-16 mx-auto mb-4 bg-accent rounded-full flex items-center justify-center">
-                <Users className="w-8 h-8 text-servicenow-blue" />
-              </div>
-              <CardTitle className="text-2xl font-bold text-foreground">Schedule Expert Consultation</CardTitle>
-              <p className="text-muted-foreground">
-                30-minute personalized session with a ServiceNow implementation expert
-              </p>
-            </CardHeader>
-            
-            <CardContent className="space-y-6">
-              <div className="grid grid-cols-2 gap-4">
-                <div className="space-y-2">
-                  <Label htmlFor="preferredDate" className="text-sm font-medium text-foreground">Preferred Date</Label>
-                  <Input
-                    id="preferredDate"
-                    type="date"
-                    value={scheduleForm.preferredDate}
-                    onChange={(e) => setScheduleForm({...scheduleForm, preferredDate: e.target.value})}
-                    min={new Date().toISOString().split('T')[0]}
-                    className="h-10"
-                  />
-                </div>
-                
-                <div className="space-y-2">
-                  <Label htmlFor="preferredTime" className="text-sm font-medium text-foreground">Preferred Time</Label>
-                  <Input
-                    id="preferredTime"
-                    type="time"
-                    value={scheduleForm.preferredTime}
-                    onChange={(e) => setScheduleForm({...scheduleForm, preferredTime: e.target.value})}
-                    className="h-10"
-                  />
-                </div>
-              </div>
-
-              <div className="space-y-2">
-                <Label htmlFor="additionalNotes" className="text-sm font-medium text-foreground">Additional Notes (Optional)</Label>
-                <Textarea
-                  id="additionalNotes"
-                  value={scheduleForm.additionalNotes}
-                  onChange={(e) => setScheduleForm({...scheduleForm, additionalNotes: e.target.value})}
-                  placeholder="Any specific topics or questions you'd like to discuss..."
-                  className="resize-none h-20"
-                  rows={3}
-                />
-              </div>
-
-              <Button 
-                onClick={handleScheduleConsultation}
-                disabled={!scheduleForm.preferredDate || !scheduleForm.preferredTime || isScheduling}
-                className="w-full h-12 bg-servicenow-blue hover:bg-servicenow-blue/90 text-primary-foreground"
-              >
-                {isScheduling ? (
-                  <div className="flex items-center">
-                    <div className="animate-spin w-4 h-4 border-2 border-primary-foreground border-t-transparent rounded-full mr-2"></div>
-                    Scheduling...
-                  </div>
-                ) : (
-                  <>
-                    <Calendar className="w-5 h-5 mr-2" />
-                    Schedule Consultation
-                  </>
-                )}
-              </Button>
-            </CardContent>
-          </Card>
         </div>
 
-        <div className="text-center">
-          <p className="text-muted-foreground">
+        <div className="text-center mt-16">
+          <p className="text-gray-600">
             Thank you for completing the ServiceNow Business Assessment. 
             Your report is ready for download or printing.
           </p>

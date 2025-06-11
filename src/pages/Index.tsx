@@ -48,20 +48,11 @@ const Index = () => {
     }
   };
 
-  const getStepLabel = () => {
-    switch (currentPhase) {
-      case 'intro': return 'Welcome';
-      case 'assessment': return 'Assessment';
-      case 'results': return 'Results';
-      default: return 'Welcome';
-    }
-  };
-
   return (
-    <div className="min-h-screen">
+    <div className="min-h-screen bg-gray-100">
       {/* Header */}
-      <header className="fixed top-0 left-0 right-0 z-50 bg-gray-700">
-        <div className="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
+      <header className="bg-gray-700 px-6 py-4">
+        <div className="max-w-7xl mx-auto flex items-center justify-between">
           <div className="flex items-center space-x-3">
             <Cloud className="w-8 h-8 text-white" />
             <h1 className="text-xl font-semibold text-white">ServiceNow Solution Advisor</h1>
@@ -84,63 +75,57 @@ const Index = () => {
 
       {/* Navigation Steps */}
       {currentPhase !== 'intro' && (
-        <div className="fixed top-16 left-0 right-0 z-40 bg-white border-b border-gray-200">
-          <div className="max-w-7xl mx-auto px-6 py-6">
+        <div className="bg-white border-b border-gray-200 px-6 py-6">
+          <div className="max-w-7xl mx-auto">
             <div className="flex items-center justify-center space-x-16">
-              <div className={`flex items-center space-x-3 ${
-                currentPhase === 'intro' ? 'text-teal-600' : 'text-gray-400'
-              }`}>
+              <div className={`flex items-center space-x-3`}>
                 <div className={`w-10 h-10 rounded-full flex items-center justify-center text-sm font-medium ${
                   getStepNumber() >= 1 ? 'bg-teal-600 text-white' : 'bg-gray-300 text-gray-600'
                 }`}>
                   1
                 </div>
-                <span className="font-medium text-lg">Welcome</span>
+                <span className="font-medium text-lg text-gray-700">Welcome</span>
               </div>
               
               <div className="flex-1 h-px bg-gray-300 max-w-xs"></div>
               
-              <div className={`flex items-center space-x-3 ${
-                currentPhase === 'assessment' ? 'text-teal-600' : 'text-gray-400'
-              }`}>
+              <div className={`flex items-center space-x-3`}>
                 <div className={`w-10 h-10 rounded-full flex items-center justify-center text-sm font-medium ${
                   getStepNumber() >= 2 ? 'bg-teal-600 text-white' : 'bg-gray-300 text-gray-600'
                 }`}>
                   2
                 </div>
-                <span className="font-medium text-lg">Assessment</span>
+                <span className="font-medium text-lg text-gray-700">Assessment</span>
               </div>
               
               <div className="flex-1 h-px bg-gray-300 max-w-xs"></div>
               
-              <div className={`flex items-center space-x-3 ${
-                currentPhase === 'results' ? 'text-teal-600' : 'text-gray-400'
-              }`}>
+              <div className={`flex items-center space-x-3`}>
                 <div className={`w-10 h-10 rounded-full flex items-center justify-center text-sm font-medium ${
                   getStepNumber() >= 3 ? 'bg-teal-600 text-white' : 'bg-gray-300 text-gray-600'
                 }`}>
                   3
                 </div>
-                <span className="font-medium text-lg">Results</span>
+                <span className="font-medium text-lg text-gray-700">Results</span>
               </div>
             </div>
           </div>
         </div>
       )}
       
-      <main className={`relative ${currentPhase !== 'intro' ? 'pt-32' : ''}`}>
+      <main>
         {currentPhase === 'intro' && (
           <HeroSection onComplete={() => handlePhaseComplete('intro')} />
         )}
         
         {currentPhase === 'assessment' && (
-          <div className="bg-gray-50 min-h-screen">
+          <div className="bg-gray-100 min-h-screen">
             <AssessmentForm onComplete={(data) => handlePhaseComplete('assessment', data)} />
           </div>
         )}
         
         {currentPhase === 'results' && assessmentData && (
-          <div className="bg-gray-50 min-h-screen">
+          <div className="bg-gray-100 min-h-screen">
             <div className="max-w-7xl mx-auto px-6 py-16">
               <RecommendationsSection 
                 assessmentData={assessmentData}
