@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { ArrowRight, Clock, TrendingUp, CheckCircle, Users, Zap, Star, Target, DollarSign, ExternalLink, BookOpen, Video, Download } from "lucide-react";
-import { AssessmentData, ServiceNowModule } from "@/types/assessment";
+import { AssessmentData, ServiceNowModule, AssessmentAnswers } from "@/types/assessment";
 
 interface RecommendationsSectionProps {
   assessmentData: AssessmentData;
@@ -245,8 +245,8 @@ const generateRecommendations = (data: AssessmentData): ServiceNowModule[] => {
     }
   ];
 
-  // Enhanced scoring system with proper type checking
-  const answers = data.answers || {};
+  // Enhanced scoring system with proper type checking and safe property access
+  const answers: Partial<AssessmentAnswers> = data.answers || {};
   const scoring: { [key: string]: number } = {};
 
   // Initialize all modules with base score
