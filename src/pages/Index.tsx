@@ -46,8 +46,10 @@ const Index = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-emerald-50">
-      <NavigationProgress currentPhase={currentPhase} onReset={resetAssessment} />
+    <div className="min-h-screen bg-gray-50">
+      {currentPhase !== 'intro' && (
+        <NavigationProgress currentPhase={currentPhase} onReset={resetAssessment} />
+      )}
       
       <main className="relative">
         {currentPhase === 'intro' && (

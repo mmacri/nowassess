@@ -5,7 +5,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
-import { Download, Calendar, Mail, CheckCircle, FileText, Users } from "lucide-react";
+import { Download, Calendar, Mail, CheckCircle, FileText, Users, TrendingUp } from "lucide-react";
 import { AssessmentData } from "@/types/assessment";
 import { useToast } from "@/hooks/use-toast";
 
@@ -24,7 +24,6 @@ export function ReportsSection({ assessmentData, onComplete }: ReportsSectionPro
   const { toast } = useToast();
 
   const handleDownloadReport = () => {
-    // In a real implementation, this would generate and download a PDF
     toast({
       title: "Report Downloaded",
       description: "Your comprehensive ServiceNow assessment report has been downloaded.",
@@ -32,6 +31,14 @@ export function ReportsSection({ assessmentData, onComplete }: ReportsSectionPro
   };
 
   const handleEmailReport = () => {
+    if (!assessmentData.contact) {
+      toast({
+        title: "Email Required",
+        description: "Please provide your email address to receive the report.",
+        variant: "destructive"
+      });
+      return;
+    }
     toast({
       title: "Report Sent",
       description: `Assessment report has been sent to ${assessmentData.contact.email}`,
@@ -40,7 +47,6 @@ export function ReportsSection({ assessmentData, onComplete }: ReportsSectionPro
 
   const handleScheduleConsultation = () => {
     setIsScheduling(true);
-    // Simulate scheduling API call
     setTimeout(() => {
       setIsScheduling(false);
       toast({
@@ -52,115 +58,146 @@ export function ReportsSection({ assessmentData, onComplete }: ReportsSectionPro
   };
 
   return (
-    <div className="min-h-screen pt-32 pb-16">
-      <div className="container mx-auto px-4 max-w-4xl">
-        <div className="text-center mb-12 space-y-4">
-          <div className="inline-flex items-center px-3 py-1 rounded-full bg-green-100 text-green-700 text-sm font-medium">
+    <div className="min-h-screen pt-20 bg-gray-50">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
+        <div className="text-center mb-16">
+          <div className="inline-flex items-center px-4 py-2 rounded-full bg-emerald-100 text-emerald-700 text-sm font-medium mb-6">
             <CheckCircle className="w-4 h-4 mr-2" />
             Assessment Complete
           </div>
           
-          <h1 className="text-4xl md:text-5xl font-bold">
-            Your ServiceNow 
-            <span className="bg-gradient-to-r from-primary to-blue-600 bg-clip-text text-transparent"> Success Package</span>
+          <h1 className="text-4xl md:text-6xl font-bold text-gray-900 mb-6 text-balance">
+            Your ServiceNow Success Package
           </h1>
           
-          <p className="text-xl text-muted-foreground max-w-3xl mx-auto">
+          <p className="text-xl text-gray-600 max-w-3xl mx-auto text-balance">
             Get your comprehensive assessment report and schedule a personalized consultation 
             to discuss your ServiceNow implementation strategy.
           </p>
         </div>
 
-        <div className="grid md:grid-cols-2 gap-8 mb-12">
+        {/* Summary Statistics */}
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-6 mb-16">
+          <div className="text-center p-6 bg-white rounded-xl shadow-sm">
+            <div className="text-3xl font-bold text-emerald-600 mb-2">3</div>
+            <div className="text-sm text-gray-600">Recommended Modules</div>
+          </div>
+          <div className="text-center p-6 bg-white rounded-xl shadow-sm">
+            <div className="text-3xl font-bold text-blue-600 mb-2">250%</div>
+            <div className="text-sm text-gray-600">Expected ROI</div>
+          </div>
+          <div className="text-center p-6 bg-white rounded-xl shadow-sm">
+            <div className="text-3xl font-bold text-purple-600 mb-2">9-12</div>
+            <div className="text-sm text-gray-600">Implementation Months</div>
+          </div>
+          <div className="text-center p-6 bg-white rounded-xl shadow-sm">
+            <div className="text-3xl font-bold text-orange-600 mb-2">40%</div>
+            <div className="text-sm text-gray-600">Efficiency Improvement</div>
+          </div>
+        </div>
+
+        <div className="grid lg:grid-cols-2 gap-8 mb-16">
           {/* Report Download Card */}
-          <Card className="shadow-lg border-0 bg-card/50 backdrop-blur-sm">
-            <CardHeader className="text-center">
-              <FileText className="w-12 h-12 mx-auto mb-4 text-primary" />
-              <CardTitle className="text-xl">Executive Assessment Report</CardTitle>
-              <p className="text-muted-foreground text-sm">
+          <Card className="shadow-lg border-0 bg-white">
+            <CardHeader className="text-center pb-6">
+              <div className="w-16 h-16 mx-auto mb-4 bg-emerald-100 rounded-full flex items-center justify-center">
+                <FileText className="w-8 h-8 text-emerald-600" />
+              </div>
+              <CardTitle className="text-2xl font-bold text-gray-900">Executive Assessment Report</CardTitle>
+              <p className="text-gray-600">
                 Comprehensive analysis with recommendations, roadmap, and ROI projections
               </p>
             </CardHeader>
             
-            <CardContent className="space-y-4">
-              <div className="bg-muted/50 rounded-lg p-4 space-y-2">
+            <CardContent className="space-y-6">
+              <div className="bg-gray-50 rounded-lg p-4 space-y-3">
                 <div className="flex justify-between text-sm">
-                  <span>Company:</span>
-                  <span className="font-medium">{assessmentData.contact.company}</span>
+                  <span className="text-gray-600">Company:</span>
+                  <span className="font-medium text-gray-900">
+                    {assessmentData.contact?.company || 'Anonymous Assessment'}
+                  </span>
                 </div>
                 <div className="flex justify-between text-sm">
-                  <span>Assessment Date:</span>
-                  <span className="font-medium">{new Date().toLocaleDateString()}</span>
+                  <span className="text-gray-600">Assessment Date:</span>
+                  <span className="font-medium text-gray-900">{new Date().toLocaleDateString()}</span>
                 </div>
                 <div className="flex justify-between text-sm">
-                  <span>Report Type:</span>
-                  <span className="font-medium">Executive Summary + Detailed Plan</span>
+                  <span className="text-gray-600">Report Type:</span>
+                  <span className="font-medium text-gray-900">Executive Summary + Implementation Plan</span>
                 </div>
               </div>
 
               <div className="space-y-3">
                 <Button 
                   onClick={handleDownloadReport}
-                  className="w-full bg-gradient-to-r from-primary to-blue-600"
+                  className="w-full servicenow-button-primary h-12"
                 >
-                  <Download className="w-4 h-4 mr-2" />
+                  <Download className="w-5 h-5 mr-2" />
                   Download PDF Report
                 </Button>
                 
                 <Button 
                   onClick={handleEmailReport}
                   variant="outline"
-                  className="w-full"
+                  className="w-full h-12"
+                  disabled={!assessmentData.contact}
                 >
-                  <Mail className="w-4 h-4 mr-2" />
-                  Email Report to {assessmentData.contact.email.split('@')[0]}...
+                  <Mail className="w-5 h-5 mr-2" />
+                  {assessmentData.contact 
+                    ? `Email to ${assessmentData.contact.email.split('@')[0]}...` 
+                    : 'Email Report (Login Required)'
+                  }
                 </Button>
               </div>
             </CardContent>
           </Card>
 
           {/* Consultation Scheduling Card */}
-          <Card className="shadow-lg border-0 bg-card/50 backdrop-blur-sm">
-            <CardHeader className="text-center">
-              <Users className="w-12 h-12 mx-auto mb-4 text-green-500" />
-              <CardTitle className="text-xl">Schedule Expert Consultation</CardTitle>
-              <p className="text-muted-foreground text-sm">
+          <Card className="shadow-lg border-0 bg-white">
+            <CardHeader className="text-center pb-6">
+              <div className="w-16 h-16 mx-auto mb-4 bg-blue-100 rounded-full flex items-center justify-center">
+                <Users className="w-8 h-8 text-blue-600" />
+              </div>
+              <CardTitle className="text-2xl font-bold text-gray-900">Schedule Expert Consultation</CardTitle>
+              <p className="text-gray-600">
                 30-minute personalized session with a ServiceNow implementation expert
               </p>
             </CardHeader>
             
-            <CardContent className="space-y-4">
+            <CardContent className="space-y-6">
               <div className="grid grid-cols-2 gap-4">
                 <div className="space-y-2">
-                  <Label htmlFor="preferredDate">Preferred Date</Label>
+                  <Label htmlFor="preferredDate" className="text-sm font-medium text-gray-700">Preferred Date</Label>
                   <Input
                     id="preferredDate"
                     type="date"
                     value={scheduleForm.preferredDate}
                     onChange={(e) => setScheduleForm({...scheduleForm, preferredDate: e.target.value})}
                     min={new Date().toISOString().split('T')[0]}
+                    className="h-10"
                   />
                 </div>
                 
                 <div className="space-y-2">
-                  <Label htmlFor="preferredTime">Preferred Time</Label>
+                  <Label htmlFor="preferredTime" className="text-sm font-medium text-gray-700">Preferred Time</Label>
                   <Input
                     id="preferredTime"
                     type="time"
                     value={scheduleForm.preferredTime}
                     onChange={(e) => setScheduleForm({...scheduleForm, preferredTime: e.target.value})}
+                    className="h-10"
                   />
                 </div>
               </div>
 
               <div className="space-y-2">
-                <Label htmlFor="additionalNotes">Additional Notes (Optional)</Label>
+                <Label htmlFor="additionalNotes" className="text-sm font-medium text-gray-700">Additional Notes (Optional)</Label>
                 <Textarea
                   id="additionalNotes"
                   value={scheduleForm.additionalNotes}
                   onChange={(e) => setScheduleForm({...scheduleForm, additionalNotes: e.target.value})}
                   placeholder="Any specific topics or questions you'd like to discuss..."
-                  className="resize-none"
+                  className="resize-none h-20"
                   rows={3}
                 />
               </div>
@@ -168,7 +205,7 @@ export function ReportsSection({ assessmentData, onComplete }: ReportsSectionPro
               <Button 
                 onClick={handleScheduleConsultation}
                 disabled={!scheduleForm.preferredDate || !scheduleForm.preferredTime || isScheduling}
-                className="w-full bg-gradient-to-r from-green-500 to-green-600"
+                className="w-full h-12 bg-blue-600 hover:bg-blue-700 text-white"
               >
                 {isScheduling ? (
                   <div className="flex items-center">
@@ -177,7 +214,7 @@ export function ReportsSection({ assessmentData, onComplete }: ReportsSectionPro
                   </div>
                 ) : (
                   <>
-                    <Calendar className="w-4 h-4 mr-2" />
+                    <Calendar className="w-5 h-5 mr-2" />
                     Schedule Consultation
                   </>
                 )}
@@ -186,32 +223,8 @@ export function ReportsSection({ assessmentData, onComplete }: ReportsSectionPro
           </Card>
         </div>
 
-        {/* Summary Statistics */}
-        <Card className="shadow-lg border-0 bg-gradient-to-r from-primary/10 to-blue-600/10 backdrop-blur-sm">
-          <CardContent className="pt-6">
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-6 text-center">
-              <div>
-                <div className="text-2xl font-bold text-primary">3</div>
-                <div className="text-sm text-muted-foreground">Recommended Modules</div>
-              </div>
-              <div>
-                <div className="text-2xl font-bold text-green-600">250%</div>
-                <div className="text-sm text-muted-foreground">Expected ROI</div>
-              </div>
-              <div>
-                <div className="text-2xl font-bold text-blue-600">9-12</div>
-                <div className="text-sm text-muted-foreground">Implementation Months</div>
-              </div>
-              <div>
-                <div className="text-2xl font-bold text-purple-600">40%</div>
-                <div className="text-sm text-muted-foreground">Efficiency Improvement</div>
-              </div>
-            </div>
-          </CardContent>
-        </Card>
-
-        <div className="text-center mt-12">
-          <p className="text-muted-foreground text-sm">
+        <div className="text-center">
+          <p className="text-gray-600">
             Thank you for completing the ServiceNow Business Assessment. 
             Our team will review your results and be in touch soon.
           </p>
