@@ -1,46 +1,36 @@
 
-export interface ContactInfo {
-  name: string;
-  email: string;
-  company: string;
-  jobTitle: string;
-  phone?: string;
+export interface AssessmentAnswers {
+  // Contact Information
+  company?: string;
+  name?: string;
+  email?: string;
+  
+  // Organization Details
+  teamSize?: string;
+  budget?: string;
+  timeline?: string;
+  currentProcesses?: string;
+  
+  // Business Challenges
+  businessChallenges?: string[];
+  operationalBottlenecks?: string;
+  itDisruptions?: string;
+  leadershipInsight?: string;
+  toolsIntegration?: string;
+  incidentResponse?: string;
 }
 
-export interface AssessmentAnswers {
-  businessChallenges: string[];
-  currentProcesses: string;
-  operationalBottlenecks: string;
-  itDisruptions: string;
-  leadershipInsight: string;
-  toolsIntegration: string;
-  incidentResponse: string;
-  automationNeeds: string[];
-  assetManagement: string;
-  regulatoryAdaptation: string;
-  complianceVisibility: string;
-  employeeProductivity: string;
-  customerExperience: string;
-  innovationBarriers: string;
-  businessAgility: string;
-  teamSize: string;
-  budget: string;
-  timeline: string;
-  priority: string;
+export interface ContactInfo {
+  company?: string;
+  name?: string;
+  email?: string;
 }
 
 export interface AssessmentData {
-  contact?: ContactInfo; // Made optional for anonymous assessments
   answers: AssessmentAnswers;
+  contact?: ContactInfo;
   score: number;
   timestamp: Date;
-}
-
-export interface ServiceNowResource {
-  type: 'documentation' | 'demo' | 'datasheet' | 'video' | 'community' | 'training';
-  title: string;
-  url: string;
-  description: string;
 }
 
 export interface ServiceNowModule {
@@ -49,11 +39,18 @@ export interface ServiceNowModule {
   description: string;
   benefits: string[];
   implementationTime: string;
-  complexity: 'Low' | 'Medium' | 'High';
+  complexity: string;
   priority: number;
   dependencies: string[];
   roi: string;
-  resources?: ServiceNowResource[];
+  resources?: ModuleResource[];
+}
+
+export interface ModuleResource {
+  title: string;
+  description: string;
+  url: string;
+  type: 'documentation' | 'video' | 'whitepaper' | 'demo';
 }
 
 export interface RoadmapPhase {
