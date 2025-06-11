@@ -6,11 +6,11 @@ import { AssessmentForm } from "@/components/AssessmentForm";
 import { RecommendationsSection } from "@/components/RecommendationsSection";
 import { RoadmapSection } from "@/components/RoadmapSection";
 import { ReportsSection } from "@/components/ReportsSection";
-import { NavigationProgress } from "@/components/NavigationProgress";
 import { AssessmentData } from "@/types/assessment";
+import { Cloud } from "lucide-react";
 
 const Index = () => {
-  const [currentPhase, setCurrentPhase] = useState<'intro' | 'assessment' | 'recommendations' | 'roadmap' | 'reports'>('intro');
+  const [currentPhase, setCurrentPhase] = useState<'intro' | 'assessment' | 'results'>('intro');
   const [assessmentData, setAssessmentData] = useState<AssessmentData | null>(null);
   const { toast } = useToast();
 
@@ -23,17 +23,9 @@ const Index = () => {
         break;
       case 'assessment':
         setAssessmentData(data);
-        setCurrentPhase('recommendations');
+        setCurrentPhase('results');
         break;
-      case 'recommendations':
-        // Don't pass any data here, just transition to roadmap
-        // assessmentData is already stored in state
-        setCurrentPhase('roadmap');
-        break;
-      case 'roadmap':
-        setCurrentPhase('reports');
-        break;
-      case 'reports':
+      case 'results':
         toast({
           title: "Assessment Complete!",
           description: "Your ServiceNow report is ready for download or printing.",
@@ -47,83 +39,89 @@ const Index = () => {
     setAssessmentData(null);
   };
 
+  const getStepNumber = () => {
+    switch (currentPhase) {
+      case 'intro': return 1;
+      case 'assessment': return 2;
+      case 'results': return 3;
+      default: return 1;
+    }
+  };
+
+  const getStepLabel = () => {
+    switch (currentPhase) {
+      case 'intro': return 'Welcome';
+      case 'assessment': return 'Assessment';
+      case 'results': return 'Results';
+      default: return 'Welcome';
+    }
+  };
+
   return (
     <div className="min-h-screen">
       {/* Header */}
-      <header className="fixed top-0 left-0 right-0 z-50 bg-white border-b border-gray-200">
+      <header className="fixed top-0 left-0 right-0 z-50 bg-gray-700">
         <div className="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
           <div className="flex items-center space-x-3">
-            <div className="w-8 h-8 bg-primary text-primary-foreground rounded flex items-center justify-center font-bold text-sm">
-              SN
-            </div>
-            <h1 className="text-xl font-semibold text-gray-900">ServiceNow Solution Advisor</h1>
+            <Cloud className="w-8 h-8 text-white" />
+            <h1 className="text-xl font-semibold text-white">ServiceNow Solution Advisor</h1>
           </div>
           
           {currentPhase !== 'intro' && (
             <button
               onClick={resetAssessment}
-              className="text-sm text-gray-600 hover:text-gray-900 font-medium"
+              className="text-sm text-gray-300 hover:text-white font-medium"
             >
               Start Over
             </button>
           )}
+          
+          <div className="text-sm text-gray-300">
+            Powered by AI-driven recommendations
+          </div>
         </div>
       </header>
 
       {/* Navigation Steps */}
       {currentPhase !== 'intro' && (
-        <div className="fixed top-16 left-0 right-0 z-40 bg-gray-50 border-b border-gray-200">
-          <div className="max-w-7xl mx-auto px-6 py-3">
-            <div className="flex items-center justify-center space-x-8">
-              <div className={`flex items-center space-x-2 ${
-                ['assessment', 'recommendations', 'roadmap', 'reports'].includes(currentPhase) 
-                  ? 'text-primary' : 'text-gray-400'
+        <div className="fixed top-16 left-0 right-0 z-40 bg-white border-b border-gray-200">
+          <div className="max-w-7xl mx-auto px-6 py-6">
+            <div className="flex items-center justify-center space-x-16">
+              <div className={`flex items-center space-x-3 ${
+                currentPhase === 'intro' ? 'text-teal-600' : 'text-gray-400'
               }`}>
-                <div className={`w-6 h-6 rounded-full flex items-center justify-center text-xs font-medium ${
-                  ['assessment', 'recommendations', 'roadmap', 'reports'].includes(currentPhase)
-                    ? 'bg-primary text-primary-foreground' : 'bg-gray-300 text-gray-600'
+                <div className={`w-10 h-10 rounded-full flex items-center justify-center text-sm font-medium ${
+                  getStepNumber() >= 1 ? 'bg-teal-600 text-white' : 'bg-gray-300 text-gray-600'
                 }`}>
                   1
                 </div>
-                <span className="text-sm font-medium">Assessment</span>
+                <span className="font-medium text-lg">Welcome</span>
               </div>
               
-              <div className={`flex items-center space-x-2 ${
-                ['recommendations', 'roadmap', 'reports'].includes(currentPhase) 
-                  ? 'text-primary' : 'text-gray-400'
+              <div className="flex-1 h-px bg-gray-300 max-w-xs"></div>
+              
+              <div className={`flex items-center space-x-3 ${
+                currentPhase === 'assessment' ? 'text-teal-600' : 'text-gray-400'
               }`}>
-                <div className={`w-6 h-6 rounded-full flex items-center justify-center text-xs font-medium ${
-                  ['recommendations', 'roadmap', 'reports'].includes(currentPhase)
-                    ? 'bg-primary text-primary-foreground' : 'bg-gray-300 text-gray-600'
+                <div className={`w-10 h-10 rounded-full flex items-center justify-center text-sm font-medium ${
+                  getStepNumber() >= 2 ? 'bg-teal-600 text-white' : 'bg-gray-300 text-gray-600'
                 }`}>
                   2
                 </div>
-                <span className="text-sm font-medium">Recommendations</span>
+                <span className="font-medium text-lg">Assessment</span>
               </div>
               
-              <div className={`flex items-center space-x-2 ${
-                ['roadmap', 'reports'].includes(currentPhase) 
-                  ? 'text-primary' : 'text-gray-400'
+              <div className="flex-1 h-px bg-gray-300 max-w-xs"></div>
+              
+              <div className={`flex items-center space-x-3 ${
+                currentPhase === 'results' ? 'text-teal-600' : 'text-gray-400'
               }`}>
-                <div className={`w-6 h-6 rounded-full flex items-center justify-center text-xs font-medium ${
-                  ['roadmap', 'reports'].includes(currentPhase)
-                    ? 'bg-primary text-primary-foreground' : 'bg-gray-300 text-gray-600'
+                <div className={`w-10 h-10 rounded-full flex items-center justify-center text-sm font-medium ${
+                  getStepNumber() >= 3 ? 'bg-teal-600 text-white' : 'bg-gray-300 text-gray-600'
                 }`}>
                   3
                 </div>
-                <span className="text-sm font-medium">Roadmap</span>
-              </div>
-              
-              <div className={`flex items-center space-x-2 ${
-                currentPhase === 'reports' ? 'text-primary' : 'text-gray-400'
-              }`}>
-                <div className={`w-6 h-6 rounded-full flex items-center justify-center text-xs font-medium ${
-                  currentPhase === 'reports'
-                    ? 'bg-primary text-primary-foreground' : 'bg-gray-300 text-gray-600'
-                }`}>
-                  4
-                </div>
-                <span className="text-sm font-medium">Report</span>
+                <span className="font-medium text-lg">Results</span>
               </div>
             </div>
           </div>
@@ -141,30 +139,28 @@ const Index = () => {
           </div>
         )}
         
-        {currentPhase === 'recommendations' && assessmentData && (
+        {currentPhase === 'results' && assessmentData && (
           <div className="bg-gray-50 min-h-screen">
-            <RecommendationsSection 
-              assessmentData={assessmentData}
-              onComplete={() => handlePhaseComplete('recommendations')} 
-            />
-          </div>
-        )}
-        
-        {currentPhase === 'roadmap' && assessmentData && (
-          <div className="bg-gray-50 min-h-screen">
-            <RoadmapSection 
-              assessmentData={assessmentData}
-              onComplete={() => handlePhaseComplete('roadmap')} 
-            />
-          </div>
-        )}
-        
-        {currentPhase === 'reports' && assessmentData && (
-          <div className="bg-gray-50 min-h-screen">
-            <ReportsSection 
-              assessmentData={assessmentData}
-              onComplete={() => handlePhaseComplete('reports')} 
-            />
+            <div className="max-w-7xl mx-auto px-6 py-16">
+              <RecommendationsSection 
+                assessmentData={assessmentData}
+                onComplete={() => {}} 
+              />
+              
+              <div className="mt-16">
+                <RoadmapSection 
+                  assessmentData={assessmentData}
+                  onComplete={() => {}} 
+                />
+              </div>
+              
+              <div className="mt-16">
+                <ReportsSection 
+                  assessmentData={assessmentData}
+                  onComplete={() => handlePhaseComplete('results')} 
+                />
+              </div>
+            </div>
           </div>
         )}
       </main>

@@ -16,33 +16,33 @@
     --popover: 0 0% 100%;
     --popover-foreground: 210 11% 15%;
 
-    /* ServiceNow green as primary */
-    --primary: 157 89% 30%;
+    /* Teal as primary color */
+    --primary: 178 78% 57%;
     --primary-foreground: 0 0% 100%;
 
-    /* ServiceNow secondary colors */
+    /* Secondary colors */
     --secondary: 210 17% 95%;
     --secondary-foreground: 210 11% 15%;
 
     --muted: 210 17% 95%;
     --muted-foreground: 210 6% 46%;
 
-    --accent: 157 89% 95%;
-    --accent-foreground: 157 89% 30%;
+    --accent: 178 78% 95%;
+    --accent-foreground: 178 78% 40%;
 
     --destructive: 0 84% 60%;
     --destructive-foreground: 0 0% 100%;
 
     --border: 210 17% 91%;
     --input: 210 17% 91%;
-    --ring: 157 89% 30%;
+    --ring: 178 78% 57%;
 
     --radius: 0.5rem;
 
-    /* ServiceNow specific colors */
-    --servicenow-green: 157 89% 30%;
-    --servicenow-dark-green: 157 89% 24%;
-    --servicenow-light-green: 157 89% 95%;
+    /* Custom colors for ServiceNow theme */
+    --servicenow-green: 178 78% 40%;
+    --servicenow-dark-green: 178 78% 30%;
+    --servicenow-light-green: 178 78% 95%;
     --servicenow-blue: 213 94% 68%;
     --servicenow-dark-blue: 213 94% 45%;
     --servicenow-navy: 210 50% 15%;
@@ -60,7 +60,7 @@
     --popover: 210 11% 7%;
     --popover-foreground: 0 0% 95%;
 
-    --primary: 157 89% 40%;
+    --primary: 178 78% 50%;
     --primary-foreground: 210 11% 4%;
 
     --secondary: 210 11% 12%;
@@ -70,14 +70,14 @@
     --muted-foreground: 210 6% 63%;
 
     --accent: 210 11% 12%;
-    --accent-foreground: 157 89% 40%;
+    --accent-foreground: 178 78% 50%;
 
     --destructive: 0 84% 60%;
     --destructive-foreground: 0 0% 98%;
 
     --border: 210 11% 12%;
     --input: 210 11% 12%;
-    --ring: 157 89% 40%;
+    --ring: 178 78% 50%;
   }
 }
 
