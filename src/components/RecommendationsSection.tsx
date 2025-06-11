@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -118,7 +117,7 @@ const generateRecommendations = (data: AssessmentData): ServiceNowModule[] => {
     }
   ];
 
-  // Enhanced scoring system
+  // Enhanced scoring system with proper type checking
   const answers = data.answers || {};
   const scoring: { [key: string]: number } = {};
 
@@ -127,81 +126,91 @@ const generateRecommendations = (data: AssessmentData): ServiceNowModule[] => {
     scoring[module.id] = 0;
   });
 
-  // Business challenges analysis
+  // Business challenges analysis with proper type checking
   const businessChallenges = answers.businessChallenges || [];
-  businessChallenges.forEach(challenge => {
-    switch (challenge) {
-      case 'Manual processes consuming too much time':
-        scoring.itsm += 4;
-        scoring.hrsd += 3;
-        scoring.csm += 2;
-        break;
-      case 'Lack of visibility into IT operations':
-        scoring.itom += 4;
-        scoring.itsm += 3;
-        scoring.secops += 2;
-        break;
-      case 'Slow incident response times':
-        scoring.itsm += 4;
-        scoring.itom += 3;
-        scoring.secops += 2;
-        break;
-      case 'Customer service quality issues':
-        scoring.csm += 4;
-        scoring.itsm += 2;
-        break;
-      case 'Compliance and regulatory challenges':
-        scoring.grc += 4;
-        scoring.secops += 3;
-        break;
-      case 'Security vulnerabilities and threats':
-        scoring.secops += 4;
-        scoring.grc += 2;
-        break;
-    }
-  });
+  if (Array.isArray(businessChallenges)) {
+    businessChallenges.forEach(challenge => {
+      switch (challenge) {
+        case 'Manual processes consuming too much time':
+          scoring.itsm += 4;
+          scoring.hrsd += 3;
+          scoring.csm += 2;
+          break;
+        case 'Lack of visibility into IT operations':
+          scoring.itom += 4;
+          scoring.itsm += 3;
+          scoring.secops += 2;
+          break;
+        case 'Slow incident response times':
+          scoring.itsm += 4;
+          scoring.itom += 3;
+          scoring.secops += 2;
+          break;
+        case 'Customer service quality issues':
+          scoring.csm += 4;
+          scoring.itsm += 2;
+          break;
+        case 'Compliance and regulatory challenges':
+          scoring.grc += 4;
+          scoring.secops += 3;
+          break;
+        case 'Security vulnerabilities and threats':
+          scoring.secops += 4;
+          scoring.grc += 2;
+          break;
+      }
+    });
+  }
 
-  // Current processes analysis
+  // Current processes analysis with proper type checking
   const currentProcesses = answers.currentProcesses || '';
-  if (currentProcesses.includes('IT Service')) {
-    scoring.itsm += 3;
-    scoring.itom += 2;
-  }
-  if (currentProcesses.includes('HR')) {
-    scoring.hrsd += 3;
-  }
-  if (currentProcesses.includes('Customer')) {
-    scoring.csm += 3;
+  if (typeof currentProcesses === 'string') {
+    if (currentProcesses.includes('IT Service')) {
+      scoring.itsm += 3;
+      scoring.itom += 2;
+    }
+    if (currentProcesses.includes('HR')) {
+      scoring.hrsd += 3;
+    }
+    if (currentProcesses.includes('Customer')) {
+      scoring.csm += 3;
+    }
   }
 
-  // Team size considerations
+  // Team size considerations with proper type checking
   const teamSize = answers.teamSize || '';
-  if (teamSize.includes('Large') || teamSize.includes('Enterprise')) {
-    scoring.itom += 3;
-    scoring.secops += 3;
-    scoring.grc += 2;
-  } else if (teamSize.includes('Medium')) {
-    scoring.itsm += 2;
-    scoring.hrsd += 2;
-    scoring.csm += 2;
+  if (typeof teamSize === 'string') {
+    if (teamSize.includes('Large') || teamSize.includes('Enterprise')) {
+      scoring.itom += 3;
+      scoring.secops += 3;
+      scoring.grc += 2;
+    } else if (teamSize.includes('Medium')) {
+      scoring.itsm += 2;
+      scoring.hrsd += 2;
+      scoring.csm += 2;
+    }
   }
 
-  // Budget considerations
+  // Budget considerations with proper type checking
   const budget = answers.budget || '';
-  if (budget.includes('$10M+')) {
-    // Can afford comprehensive solutions
-    Object.keys(scoring).forEach(key => scoring[key] += 1);
-  } else if (budget.includes('$2M - $10M')) {
-    // Focus on high-impact modules
-    scoring.itsm += 2;
-    scoring.hrsd += 1;
+  if (typeof budget === 'string') {
+    if (budget.includes('$10M+')) {
+      // Can afford comprehensive solutions
+      Object.keys(scoring).forEach(key => scoring[key] += 1);
+    } else if (budget.includes('$2M - $10M')) {
+      // Focus on high-impact modules
+      scoring.itsm += 2;
+      scoring.hrsd += 1;
+    }
   }
 
-  // Timeline urgency
+  // Timeline urgency with proper type checking
   const timeline = answers.timeline || '';
-  if (timeline.includes('Immediate')) {
-    scoring.itsm += 2;
-    scoring.hrsd += 2; // Quick wins
+  if (typeof timeline === 'string') {
+    if (timeline.includes('Immediate')) {
+      scoring.itsm += 2;
+      scoring.hrsd += 2; // Quick wins
+    }
   }
 
   // Sort modules by score and return top recommendations
