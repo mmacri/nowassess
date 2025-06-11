@@ -36,6 +36,13 @@ export interface AssessmentData {
   timestamp: Date;
 }
 
+export interface ServiceNowResource {
+  type: 'documentation' | 'demo' | 'datasheet' | 'video' | 'community' | 'training';
+  title: string;
+  url: string;
+  description: string;
+}
+
 export interface ServiceNowModule {
   id: string;
   name: string;
@@ -46,6 +53,7 @@ export interface ServiceNowModule {
   priority: number;
   dependencies: string[];
   roi: string;
+  resources?: ServiceNowResource[];
 }
 
 export interface RoadmapPhase {

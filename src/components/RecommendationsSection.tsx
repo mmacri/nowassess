@@ -1,8 +1,9 @@
+
 import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { ArrowRight, Clock, TrendingUp, CheckCircle, Users, Zap, Star, Target, DollarSign } from "lucide-react";
+import { ArrowRight, Clock, TrendingUp, CheckCircle, Users, Zap, Star, Target, DollarSign, ExternalLink, BookOpen, Video, Download } from "lucide-react";
 import { AssessmentData, ServiceNowModule } from "@/types/assessment";
 
 interface RecommendationsSectionProps {
@@ -10,7 +11,14 @@ interface RecommendationsSectionProps {
   onComplete: () => void;
 }
 
-// Enhanced recommendation engine with more comprehensive scoring
+interface ServiceNowResource {
+  type: 'documentation' | 'demo' | 'datasheet' | 'video' | 'community' | 'training';
+  title: string;
+  url: string;
+  description: string;
+}
+
+// Enhanced ServiceNow modules with comprehensive resources and links
 const generateRecommendations = (data: AssessmentData): ServiceNowModule[] => {
   const modules: ServiceNowModule[] = [
     {
@@ -28,7 +36,33 @@ const generateRecommendations = (data: AssessmentData): ServiceNowModule[] => {
       complexity: 'Medium',
       priority: 1,
       dependencies: [],
-      roi: '250% in first year'
+      roi: '250% in first year',
+      resources: [
+        {
+          type: 'documentation',
+          title: 'ITSM Product Overview',
+          url: 'https://www.servicenow.com/products/itsm/',
+          description: 'Complete overview of IT Service Management capabilities'
+        },
+        {
+          type: 'demo',
+          title: 'ITSM Interactive Demo',
+          url: 'https://www.servicenow.com/products/itsm/demo/',
+          description: 'Experience ITSM capabilities with hands-on demo'
+        },
+        {
+          type: 'datasheet',
+          title: 'ITSM Datasheet',
+          url: 'https://www.servicenow.com/content/dam/servicenow-assets/public/en-us/doc-type/data-sheet/ds-it-service-management.pdf',
+          description: 'Technical specifications and feature details'
+        },
+        {
+          type: 'training',
+          title: 'ServiceNow Learning Portal - ITSM',
+          url: 'https://nowlearning.servicenow.com/lxp',
+          description: 'Comprehensive training modules for ITSM implementation'
+        }
+      ]
     },
     {
       id: 'itom',
@@ -45,7 +79,33 @@ const generateRecommendations = (data: AssessmentData): ServiceNowModule[] => {
       complexity: 'High',
       priority: 2,
       dependencies: ['itsm'],
-      roi: '300% in 18 months'
+      roi: '300% in 18 months',
+      resources: [
+        {
+          type: 'documentation',
+          title: 'ITOM Product Suite',
+          url: 'https://www.servicenow.com/products/itom/',
+          description: 'Complete IT Operations Management solution overview'
+        },
+        {
+          type: 'video',
+          title: 'ITOM Discovery and Service Mapping',
+          url: 'https://www.servicenow.com/products/itom/discovery/',
+          description: 'Learn about automated infrastructure discovery'
+        },
+        {
+          type: 'datasheet',
+          title: 'Cloud Observability Datasheet',
+          url: 'https://www.servicenow.com/products/itom/cloud-observability/',
+          description: 'Cloud-native monitoring and observability features'
+        },
+        {
+          type: 'community',
+          title: 'ITOM Community',
+          url: 'https://community.servicenow.com/community?id=community_forum&sys_id=7c9b6a5fdb9cdbc01dcaf3231f9619a1',
+          description: 'Connect with ITOM experts and practitioners'
+        }
+      ]
     },
     {
       id: 'hrsd',
@@ -62,7 +122,27 @@ const generateRecommendations = (data: AssessmentData): ServiceNowModule[] => {
       complexity: 'Low',
       priority: 3,
       dependencies: [],
-      roi: '180% in first year'
+      roi: '180% in first year',
+      resources: [
+        {
+          type: 'documentation',
+          title: 'HR Service Delivery Overview',
+          url: 'https://www.servicenow.com/products/hr-service-delivery/',
+          description: 'Transform HR service delivery with digital workflows'
+        },
+        {
+          type: 'demo',
+          title: 'Employee Center Demo',
+          url: 'https://www.servicenow.com/products/employee-workflows/',
+          description: 'See the employee self-service experience in action'
+        },
+        {
+          type: 'datasheet',
+          title: 'HR Service Delivery Datasheet',
+          url: 'https://www.servicenow.com/content/dam/servicenow-assets/public/en-us/doc-type/data-sheet/ds-hr-service-delivery.pdf',
+          description: 'Technical details and HR-specific capabilities'
+        }
+      ]
     },
     {
       id: 'secops',
@@ -79,7 +159,27 @@ const generateRecommendations = (data: AssessmentData): ServiceNowModule[] => {
       complexity: 'High',
       priority: 4,
       dependencies: ['itsm', 'itom'],
-      roi: '400% in 2 years'
+      roi: '400% in 2 years',
+      resources: [
+        {
+          type: 'documentation',
+          title: 'Security Operations Overview',
+          url: 'https://www.servicenow.com/products/security-operations/',
+          description: 'Comprehensive security operations capabilities'
+        },
+        {
+          type: 'demo',
+          title: 'Vulnerability Response Demo',
+          url: 'https://www.servicenow.com/products/vulnerability-response/',
+          description: 'See automated vulnerability management in action'
+        },
+        {
+          type: 'datasheet',
+          title: 'Security Incident Response',
+          url: 'https://www.servicenow.com/products/security-incident-response/',
+          description: 'Automated security incident response workflows'
+        }
+      ]
     },
     {
       id: 'csm',
@@ -96,7 +196,21 @@ const generateRecommendations = (data: AssessmentData): ServiceNowModule[] => {
       complexity: 'Medium',
       priority: 5,
       dependencies: [],
-      roi: '220% in first year'
+      roi: '220% in first year',
+      resources: [
+        {
+          type: 'documentation',
+          title: 'Customer Service Management',
+          url: 'https://www.servicenow.com/products/customer-service-management/',
+          description: 'Transform customer service operations'
+        },
+        {
+          type: 'demo',
+          title: 'Customer Service Portal Demo',
+          url: 'https://www.servicenow.com/products/customer-workflows/',
+          description: 'Experience customer self-service capabilities'
+        }
+      ]
     },
     {
       id: 'grc',
@@ -113,7 +227,21 @@ const generateRecommendations = (data: AssessmentData): ServiceNowModule[] => {
       complexity: 'High',
       priority: 6,
       dependencies: ['itsm'],
-      roi: '280% in 2 years'
+      roi: '280% in 2 years',
+      resources: [
+        {
+          type: 'documentation',
+          title: 'Governance Risk Compliance',
+          url: 'https://www.servicenow.com/products/governance-risk-compliance/',
+          description: 'Integrated GRC platform capabilities'
+        },
+        {
+          type: 'datasheet',
+          title: 'Risk Management Datasheet',
+          url: 'https://www.servicenow.com/products/risk-management/',
+          description: 'Enterprise risk management features'
+        }
+      ]
     }
   ];
 
@@ -127,7 +255,7 @@ const generateRecommendations = (data: AssessmentData): ServiceNowModule[] => {
   });
 
   // Business challenges analysis with proper type checking
-  const businessChallenges = answers.businessChallenges || [];
+  const businessChallenges = answers.businessChallenges;
   if (Array.isArray(businessChallenges)) {
     businessChallenges.forEach(challenge => {
       switch (challenge) {
@@ -163,7 +291,7 @@ const generateRecommendations = (data: AssessmentData): ServiceNowModule[] => {
   }
 
   // Current processes analysis with proper type checking
-  const currentProcesses = answers.currentProcesses || '';
+  const currentProcesses = answers.currentProcesses;
   if (typeof currentProcesses === 'string') {
     if (currentProcesses.includes('IT Service')) {
       scoring.itsm += 3;
@@ -178,7 +306,7 @@ const generateRecommendations = (data: AssessmentData): ServiceNowModule[] => {
   }
 
   // Team size considerations with proper type checking
-  const teamSize = answers.teamSize || '';
+  const teamSize = answers.teamSize;
   if (typeof teamSize === 'string') {
     if (teamSize.includes('Large') || teamSize.includes('Enterprise')) {
       scoring.itom += 3;
@@ -192,7 +320,7 @@ const generateRecommendations = (data: AssessmentData): ServiceNowModule[] => {
   }
 
   // Budget considerations with proper type checking
-  const budget = answers.budget || '';
+  const budget = answers.budget;
   if (typeof budget === 'string') {
     if (budget.includes('$10M+')) {
       // Can afford comprehensive solutions
@@ -205,7 +333,7 @@ const generateRecommendations = (data: AssessmentData): ServiceNowModule[] => {
   }
 
   // Timeline urgency with proper type checking
-  const timeline = answers.timeline || '';
+  const timeline = answers.timeline;
   if (typeof timeline === 'string') {
     if (timeline.includes('Immediate')) {
       scoring.itsm += 2;
@@ -255,7 +383,8 @@ export function RecommendationsSection({ assessmentData, onComplete }: Recommend
             complexity: 'Medium',
             priority: 1,
             dependencies: [],
-            roi: '250% in first year'
+            roi: '250% in first year',
+            resources: []
           }
         ]);
         setIsLoading(false);
@@ -264,6 +393,18 @@ export function RecommendationsSection({ assessmentData, onComplete }: Recommend
 
     return () => clearTimeout(timer);
   }, [assessmentData]);
+
+  const getResourceIcon = (type: string) => {
+    switch (type) {
+      case 'documentation': return <BookOpen className="w-4 h-4" />;
+      case 'demo': return <Video className="w-4 h-4" />;
+      case 'datasheet': return <Download className="w-4 h-4" />;
+      case 'video': return <Video className="w-4 h-4" />;
+      case 'community': return <Users className="w-4 h-4" />;
+      case 'training': return <Target className="w-4 h-4" />;
+      default: return <ExternalLink className="w-4 h-4" />;
+    }
+  };
 
   if (isLoading) {
     return (
@@ -369,7 +510,7 @@ export function RecommendationsSection({ assessmentData, onComplete }: Recommend
                       <Target className="w-5 h-5 mr-2 text-green-500" />
                       Key Business Benefits
                     </h4>
-                    <ul className="space-y-3">
+                    <ul className="space-y-3 mb-6">
                       {module.benefits.map((benefit, i) => (
                         <li key={i} className="flex items-start space-x-3 text-sm">
                           <CheckCircle className="w-4 h-4 text-green-500 mt-0.5 flex-shrink-0" />
@@ -377,6 +518,40 @@ export function RecommendationsSection({ assessmentData, onComplete }: Recommend
                         </li>
                       ))}
                     </ul>
+
+                    {/* ServiceNow Resources */}
+                    {module.resources && module.resources.length > 0 && (
+                      <div>
+                        <h4 className="font-semibold mb-3 flex items-center text-gray-900">
+                          <BookOpen className="w-5 h-5 mr-2 text-servicenow-primary" />
+                          ServiceNow Resources
+                        </h4>
+                        <div className="space-y-2">
+                          {module.resources.map((resource, i) => (
+                            <a 
+                              key={i}
+                              href={resource.url}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              className="flex items-center p-3 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors group"
+                            >
+                              <div className="mr-3 text-servicenow-primary">
+                                {getResourceIcon(resource.type)}
+                              </div>
+                              <div className="flex-1 min-w-0">
+                                <div className="text-sm font-medium text-gray-900 group-hover:text-servicenow-primary">
+                                  {resource.title}
+                                </div>
+                                <div className="text-xs text-gray-600 truncate">
+                                  {resource.description}
+                                </div>
+                              </div>
+                              <ExternalLink className="w-4 h-4 text-gray-400 group-hover:text-servicenow-primary" />
+                            </a>
+                          ))}
+                        </div>
+                      </div>
+                    )}
                   </div>
                   
                   <div>
@@ -384,7 +559,7 @@ export function RecommendationsSection({ assessmentData, onComplete }: Recommend
                       <Users className="w-5 h-5 mr-2 text-blue-500" />
                       Implementation Overview
                     </h4>
-                    <div className="space-y-3 text-sm">
+                    <div className="space-y-3 text-sm mb-6">
                       <div className="flex justify-between">
                         <span className="font-medium text-gray-600">Timeline:</span> 
                         <span className="text-gray-900">{module.implementationTime}</span>
@@ -404,12 +579,98 @@ export function RecommendationsSection({ assessmentData, onComplete }: Recommend
                         </div>
                       )}
                     </div>
+
+                    {/* Additional ServiceNow Links */}
+                    <div className="bg-servicenow-primary/5 rounded-lg p-4">
+                      <h5 className="font-medium text-gray-900 mb-3">Next Steps</h5>
+                      <div className="space-y-2 text-sm">
+                        <a 
+                          href="https://www.servicenow.com/contact/"
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="flex items-center text-servicenow-primary hover:underline"
+                        >
+                          <ExternalLink className="w-3 h-3 mr-1" />
+                          Schedule a Demo
+                        </a>
+                        <a 
+                          href="https://nowlearning.servicenow.com/"
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="flex items-center text-servicenow-primary hover:underline"
+                        >
+                          <ExternalLink className="w-3 h-3 mr-1" />
+                          Access Training
+                        </a>
+                        <a 
+                          href="https://community.servicenow.com/"
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="flex items-center text-servicenow-primary hover:underline"
+                        >
+                          <ExternalLink className="w-3 h-3 mr-1" />
+                          Join Community
+                        </a>
+                      </div>
+                    </div>
                   </div>
                 </div>
               </CardContent>
             </Card>
           ))}
         </div>
+
+        {/* Additional ServiceNow Resources Section */}
+        <Card className="mb-8 shadow-lg border-0 bg-white">
+          <CardHeader>
+            <CardTitle className="text-xl text-gray-900 flex items-center">
+              <BookOpen className="w-6 h-6 mr-2 text-servicenow-primary" />
+              Additional ServiceNow Resources
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="grid md:grid-cols-3 gap-4">
+              <a 
+                href="https://www.servicenow.com/lpebk/platform-overview.html"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="p-4 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors"
+              >
+                <div className="flex items-center mb-2">
+                  <Download className="w-5 h-5 mr-2 text-servicenow-primary" />
+                  <span className="font-medium">Platform Overview</span>
+                </div>
+                <p className="text-sm text-gray-600">Complete guide to the ServiceNow Platform</p>
+              </a>
+              
+              <a 
+                href="https://www.servicenow.com/customers/"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="p-4 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors"
+              >
+                <div className="flex items-center mb-2">
+                  <Users className="w-5 h-5 mr-2 text-servicenow-primary" />
+                  <span className="font-medium">Customer Success Stories</span>
+                </div>
+                <p className="text-sm text-gray-600">Real-world implementations and results</p>
+              </a>
+              
+              <a 
+                href="https://www.servicenow.com/services/"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="p-4 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors"
+              >
+                <div className="flex items-center mb-2">
+                  <Target className="w-5 h-5 mr-2 text-servicenow-primary" />
+                  <span className="font-medium">Professional Services</span>
+                </div>
+                <p className="text-sm text-gray-600">Expert implementation and consulting services</p>
+              </a>
+            </div>
+          </CardContent>
+        </Card>
 
         <div className="text-center bg-white rounded-lg p-8 shadow-lg">
           <h3 className="text-xl font-semibold text-gray-900 mb-3">Ready to see your implementation roadmap?</h3>
