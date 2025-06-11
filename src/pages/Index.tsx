@@ -46,7 +46,7 @@ const Index = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen">
       {currentPhase !== 'intro' && (
         <NavigationProgress currentPhase={currentPhase} onReset={resetAssessment} />
       )}
@@ -57,28 +57,36 @@ const Index = () => {
         )}
         
         {currentPhase === 'assessment' && (
-          <AssessmentForm onComplete={(data) => handlePhaseComplete('assessment', data)} />
+          <div className="bg-gray-50 min-h-screen pt-20">
+            <AssessmentForm onComplete={(data) => handlePhaseComplete('assessment', data)} />
+          </div>
         )}
         
         {currentPhase === 'recommendations' && assessmentData && (
-          <RecommendationsSection 
-            assessmentData={assessmentData}
-            onComplete={() => handlePhaseComplete('recommendations')} 
-          />
+          <div className="bg-gray-50 min-h-screen pt-20">
+            <RecommendationsSection 
+              assessmentData={assessmentData}
+              onComplete={() => handlePhaseComplete('recommendations')} 
+            />
+          </div>
         )}
         
         {currentPhase === 'roadmap' && assessmentData && (
-          <RoadmapSection 
-            assessmentData={assessmentData}
-            onComplete={() => handlePhaseComplete('roadmap')} 
-          />
+          <div className="bg-gray-50 min-h-screen pt-20">
+            <RoadmapSection 
+              assessmentData={assessmentData}
+              onComplete={() => handlePhaseComplete('roadmap')} 
+            />
+          </div>
         )}
         
         {currentPhase === 'reports' && assessmentData && (
-          <ReportsSection 
-            assessmentData={assessmentData}
-            onComplete={() => handlePhaseComplete('reports')} 
-          />
+          <div className="bg-gray-50 min-h-screen pt-20">
+            <ReportsSection 
+              assessmentData={assessmentData}
+              onComplete={() => handlePhaseComplete('reports')} 
+            />
+          </div>
         )}
       </main>
     </div>
