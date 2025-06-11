@@ -30,7 +30,7 @@ export interface AssessmentAnswers {
 }
 
 export interface AssessmentData {
-  contact: ContactInfo;
+  contact?: ContactInfo; // Made optional for anonymous assessments
   answers: AssessmentAnswers;
   score: number;
   timestamp: Date;
