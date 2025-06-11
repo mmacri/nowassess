@@ -5,7 +5,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
-import { Download, Calendar, Mail, CheckCircle, FileText, Users } from "lucide-react";
+import { Download, Calendar, CheckCircle, FileText, Users, Printer } from "lucide-react";
 import { AssessmentData } from "@/types/assessment";
 import { useToast } from "@/hooks/use-toast";
 
@@ -24,24 +24,42 @@ export function ReportsSection({ assessmentData, onComplete }: ReportsSectionPro
   const { toast } = useToast();
 
   const handleDownloadReport = () => {
+    // Create a simple download functionality
+    const reportContent = `
+ServiceNow Assessment Report
+Generated: ${new Date().toLocaleDateString()}
+
+SUMMARY STATISTICS:
+- Recommended Modules: 3
+- Expected ROI: 250%
+- Implementation Timeline: 9-12 months
+- Efficiency Improvement: 40%
+
+ASSESSMENT RESPONSES:
+${JSON.stringify(assessmentData, null, 2)}
+    `;
+    
+    const blob = new Blob([reportContent], { type: 'text/plain' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = 'servicenow-assessment-report.txt';
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+    
     toast({
       title: "Report Downloaded",
       description: "Your comprehensive ServiceNow assessment report has been downloaded.",
     });
   };
 
-  const handleEmailReport = () => {
-    if (!assessmentData.contact) {
-      toast({
-        title: "Email Required",
-        description: "Please provide your email address to receive the report.",
-        variant: "destructive"
-      });
-      return;
-    }
+  const handlePrintReport = () => {
+    window.print();
     toast({
-      title: "Report Sent",
-      description: `Assessment report has been sent to ${assessmentData.contact.email}`,
+      title: "Print Dialog Opened",
+      description: "Use your browser's print function to print the assessment report.",
     });
   };
 
@@ -71,8 +89,8 @@ export function ReportsSection({ assessmentData, onComplete }: ReportsSectionPro
           </h1>
           
           <p className="text-xl text-muted-foreground max-w-3xl mx-auto text-balance">
-            Get your comprehensive assessment report and schedule a personalized consultation 
-            to discuss your ServiceNow implementation strategy.
+            Your comprehensive assessment report is ready. Download or print your results and schedule a 
+            personalized consultation to discuss your ServiceNow implementation strategy.
           </p>
         </div>
 
@@ -103,7 +121,7 @@ export function ReportsSection({ assessmentData, onComplete }: ReportsSectionPro
               <div className="w-16 h-16 mx-auto mb-4 bg-accent rounded-full flex items-center justify-center">
                 <FileText className="w-8 h-8 text-servicenow-primary" />
               </div>
-              <CardTitle className="text-2xl font-bold text-foreground">Executive Assessment Report</CardTitle>
+              <CardTitle className="text-2xl font-bold text-foreground">Assessment Report</CardTitle>
               <p className="text-muted-foreground">
                 Comprehensive analysis with recommendations, roadmap, and ROI projections
               </p>
@@ -111,12 +129,6 @@ export function ReportsSection({ assessmentData, onComplete }: ReportsSectionPro
             
             <CardContent className="space-y-6">
               <div className="bg-muted rounded-lg p-4 space-y-3">
-                <div className="flex justify-between text-sm">
-                  <span className="text-muted-foreground">Company:</span>
-                  <span className="font-medium text-foreground">
-                    {assessmentData.contact?.company || 'Anonymous Assessment'}
-                  </span>
-                </div>
                 <div className="flex justify-between text-sm">
                   <span className="text-muted-foreground">Assessment Date:</span>
                   <span className="font-medium text-foreground">{new Date().toLocaleDateString()}</span>
@@ -133,20 +145,16 @@ export function ReportsSection({ assessmentData, onComplete }: ReportsSectionPro
                   className="w-full servicenow-button-primary h-12"
                 >
                   <Download className="w-5 h-5 mr-2" />
-                  Download PDF Report
+                  Download Report
                 </Button>
                 
                 <Button 
-                  onClick={handleEmailReport}
+                  onClick={handlePrintReport}
                   variant="outline"
                   className="w-full h-12"
-                  disabled={!assessmentData.contact}
                 >
-                  <Mail className="w-5 h-5 mr-2" />
-                  {assessmentData.contact 
-                    ? `Email to ${assessmentData.contact.email.split('@')[0]}...` 
-                    : 'Email Report (Login Required)'
-                  }
+                  <Printer className="w-5 h-5 mr-2" />
+                  Print Report
                 </Button>
               </div>
             </CardContent>
@@ -226,7 +234,7 @@ export function ReportsSection({ assessmentData, onComplete }: ReportsSectionPro
         <div className="text-center">
           <p className="text-muted-foreground">
             Thank you for completing the ServiceNow Business Assessment. 
-            Our team will review your results and be in touch soon.
+            Your report is ready for download or printing.
           </p>
         </div>
       </div>

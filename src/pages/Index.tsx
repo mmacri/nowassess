@@ -34,7 +34,7 @@ const Index = () => {
       case 'reports':
         toast({
           title: "Assessment Complete!",
-          description: "Your customized ServiceNow report has been generated.",
+          description: "Your ServiceNow report is ready for download or printing.",
         });
         break;
     }
@@ -53,7 +53,7 @@ const Index = () => {
       
       <main className="relative">
         {currentPhase === 'intro' && (
-          <HeroSection onComplete={(data) => handlePhaseComplete('intro', data)} />
+          <HeroSection onComplete={() => handlePhaseComplete('intro')} />
         )}
         
         {currentPhase === 'assessment' && (
