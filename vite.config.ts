@@ -20,7 +20,8 @@ export default defineConfig(({ mode }) => ({
       "@": path.resolve(__dirname, "./src"),
     },
   },
-  base: "./", // This ensures the app works on GitHub Pages
+  // For GitHub Pages deployment - update this to match your repository name
+  base: process.env.NODE_ENV === 'production' ? '/your-repo-name/' : './',
   build: {
     outDir: "dist",
     assetsDir: "assets",

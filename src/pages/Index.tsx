@@ -22,7 +22,14 @@ const Index = () => {
         setCurrentPhase('assessment');
         break;
       case 'assessment':
-        setAssessmentData(data);
+        // Ensure data is properly structured as AssessmentData
+        const structuredData: AssessmentData = {
+          answers: data, // The data from assessment form is the answers object
+          score: 0,
+          timestamp: new Date()
+        };
+        console.log('Structured assessment data:', structuredData);
+        setAssessmentData(structuredData);
         setCurrentPhase('results');
         break;
       case 'results':
