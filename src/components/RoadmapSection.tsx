@@ -12,89 +12,142 @@ interface RoadmapSectionProps {
 }
 
 const generateRoadmap = (data: AssessmentData): RoadmapPhase[] => {
-  // Add safety checks for data structure
-  const timeline = data?.answers?.timeline || 'Medium-term (6-12 months)';
-  const teamSize = data?.answers?.teamSize || 'Medium (100-1,000 employees)';
+  console.log('Generating roadmap with data:', data);
   
+  // Safe access to assessment data
+  const answers = data?.answers || {};
+  const timeline = answers.timeline || 'Medium-term (6-12 months)';
+  const teamSize = answers.teamSize || 'Medium (100-1,000 employees)';
+  const budget = answers.budget || '$100K - $500K';
+  
+  // Determine phase duration based on timeline
   let phaseDuration = '3 months';
-  if (timeline?.includes('Immediate')) phaseDuration = '6-8 weeks';
-  if (timeline?.includes('Long-term')) phaseDuration = '4-5 months';
+  if (timeline.includes('Immediate')) {
+    phaseDuration = '6-8 weeks';
+  } else if (timeline.includes('Long-term')) {
+    phaseDuration = '4-5 months';
+  }
+
+  // Determine modules based on business challenges
+  const challenges = answers.businessChallenges || [];
+  let primaryModules = ['ITSM Core', 'User Management'];
+  let secondaryModules = ['Advanced ITSM', 'Knowledge Management'];
+  let advancedModules = ['ITOM', 'Performance Analytics'];
+
+  if (challenges.includes('Security vulnerabilities and threats') || 
+      challenges.includes('Compliance and risk management issues')) {
+    secondaryModules.push('Security Operations');
+    advancedModules.push('GRC');
+  }
+
+  if (challenges.includes('Customer service quality issues')) {
+    secondaryModules.push('Customer Service Management');
+  }
+
+  if (challenges.includes('Employee productivity concerns')) {
+    primaryModules.push('HR Service Delivery');
+  }
 
   return [
     {
       id: 'foundation',
       name: 'Foundation & Planning',
       duration: phaseDuration,
-      modules: ['ITSM Core', 'User Management'],
+      modules: primaryModules,
       milestones: [
         'Platform setup and configuration',
-        'User accounts and permissions',
-        'Basic ITSM workflows configured',
-        'Initial team training completed'
+        'User accounts and permissions configured',
+        'Basic ITSM workflows implemented',
+        'Initial team training completed',
+        'Core integrations established'
       ],
       resources: [
         '2-3 ServiceNow administrators',
         '1 project manager',
-        '4-6 key business users for testing'
+        '4-6 key business users for testing',
+        'Change management specialist'
       ],
-      description: 'Establish the ServiceNow foundation with core ITSM capabilities and user onboarding.'
+      description: 'Establish the ServiceNow foundation with core capabilities and user onboarding.'
     },
     {
       id: 'expansion',
       name: 'Core Module Deployment',
       duration: phaseDuration,
-      modules: ['Advanced ITSM', 'Knowledge Management', 'Reporting'],
+      modules: secondaryModules,
       milestones: [
-        'Advanced workflows implemented',
-        'Knowledge base populated',
-        'Custom dashboards created',
-        'Integration with existing tools'
+        'Advanced workflows configured',
+        'Knowledge base populated with content',
+        'Custom dashboards and reports created',
+        'Department-specific processes implemented',
+        'User adoption metrics established'
       ],
       resources: [
         '3-4 ServiceNow developers',
         '2 business analysts',
-        '6-8 department representatives'
+        '6-8 department representatives',
+        'Training coordinator'
       ],
-      description: 'Deploy core ServiceNow modules with advanced configurations and integrations.'
+      description: 'Deploy core ServiceNow modules with advanced configurations and department-specific workflows.'
     },
     {
       id: 'optimization',
       name: 'Optimization & Scale',
       duration: phaseDuration,
-      modules: ['ITOM', 'Security Operations', 'Performance Analytics'],
+      modules: advancedModules,
       milestones: [
-        'Full organization rollout',
-        'Advanced analytics implemented',
-        'Process optimization completed',
-        'Performance metrics established'
+        'Full organization rollout completed',
+        'Advanced analytics and reporting implemented',
+        'Process optimization and automation',
+        'Performance metrics and KPIs established',
+        'Continuous improvement processes in place'
       ],
       resources: [
         '2-3 ServiceNow specialists',
         '1 analytics expert',
-        'Department change champions'
+        'Department change champions',
+        'Process improvement team'
       ],
-      description: 'Optimize processes, implement advanced modules, and scale across the organization.'
+      description: 'Optimize processes, implement advanced modules, and scale across the entire organization.'
     }
   ];
 };
 
 export function RoadmapSection({ assessmentData, onComplete }: RoadmapSectionProps) {
   const [roadmap, setRoadmap] = useState<RoadmapPhase[]>([]);
-  const [selectedPhase, setSelectedPhase] = useState<string | null>(null);
+  const [selectedPhase, setSelectedPhase] = useState<string | null>('foundation');
 
   useEffect(() => {
     console.log('RoadmapSection received assessment data:', assessmentData);
     
-    // Add safety check before generating roadmap
-    if (assessmentData) {
+    if (assessmentData && assessmentData.answers) {
       const generatedRoadmap = generateRoadmap(assessmentData);
+      console.log('Generated roadmap:', generatedRoadmap);
       setRoadmap(generatedRoadmap);
     } else {
-      console.warn('No assessment data available for roadmap generation');
+      console.warn('No valid assessment data available for roadmap generation');
       // Set default roadmap if no data available
-      setRoadmap(generateRoadmap({} as AssessmentData));
+      const defaultData = {
+        answers: {
+          timeline: 'Medium-term (6-12 months)',
+          teamSize: 'Medium (100-1,000 employees)',
+          businessChallenges: []
+        }
+      } as AssessmentData;
+      setRoadmap(generateRoadmap(defaultData));
     }
   }, [assessmentData]);
+
+  const getTotalDuration = () => {
+    if (roadmap.length === 0) return "9-12 months";
+    
+    const firstPhaseDuration = roadmap[0]?.duration || "3 months";
+    if (firstPhaseDuration.includes('6-8 weeks')) {
+      return "4-6 months";
+    } else if (firstPhaseDuration.includes('4-5 months')) {
+      return "12-15 months";
+    }
+    return "9-12 months";
+  };
 
   return (
     <div className="min-h-screen pt-32 pb-16">
@@ -114,35 +167,46 @@ export function RoadmapSection({ assessmentData, onComplete }: RoadmapSectionPro
             A detailed, phased approach to implementing ServiceNow across your organization, 
             tailored to your timeline and resource constraints.
           </p>
+          
+          <div className="mt-6 p-4 bg-blue-50 rounded-lg inline-block">
+            <div className="text-sm text-blue-600 font-medium">
+              Total Implementation Timeline: {getTotalDuration()}
+            </div>
+          </div>
         </div>
 
         {/* Timeline Overview */}
-        <div className="mb-12">
-          <div className="flex flex-col md:flex-row justify-between items-center space-y-4 md:space-y-0 mb-8">
-            {roadmap.map((phase, index) => (
-              <div key={phase.id} className="flex-1 relative">
-                <div className="flex items-center">
-                  <div className="flex flex-col items-center">
-                    <div className={`w-8 h-8 rounded-full flex items-center justify-center text-sm font-bold ${
-                      selectedPhase === phase.id 
-                        ? 'bg-primary text-primary-foreground' 
-                        : 'bg-muted text-muted-foreground'
-                    }`}>
-                      {index + 1}
+        {roadmap.length > 0 && (
+          <div className="mb-12">
+            <div className="flex flex-col md:flex-row justify-between items-center space-y-4 md:space-y-0 mb-8">
+              {roadmap.map((phase, index) => (
+                <div key={phase.id} className="flex-1 relative">
+                  <div className="flex items-center">
+                    <div className="flex flex-col items-center">
+                      <div 
+                        className={`w-8 h-8 rounded-full flex items-center justify-center text-sm font-bold cursor-pointer transition-colors ${
+                          selectedPhase === phase.id 
+                            ? 'bg-primary text-primary-foreground' 
+                            : 'bg-muted text-muted-foreground hover:bg-primary/20'
+                        }`}
+                        onClick={() => setSelectedPhase(phase.id)}
+                      >
+                        {index + 1}
+                      </div>
+                      <div className="text-center mt-2">
+                        <div className="font-semibold text-sm">{phase.name}</div>
+                        <div className="text-xs text-muted-foreground">{phase.duration}</div>
+                      </div>
                     </div>
-                    <div className="text-center mt-2">
-                      <div className="font-semibold text-sm">{phase.name}</div>
-                      <div className="text-xs text-muted-foreground">{phase.duration}</div>
-                    </div>
+                    {index < roadmap.length - 1 && (
+                      <div className="hidden md:block flex-1 h-px bg-border ml-4"></div>
+                    )}
                   </div>
-                  {index < roadmap.length - 1 && (
-                    <div className="hidden md:block flex-1 h-px bg-border ml-4"></div>
-                  )}
                 </div>
-              </div>
-            ))}
+              ))}
+            </div>
           </div>
-        </div>
+        )}
 
         {/* Phase Details */}
         <div className="grid gap-6 mb-12">
@@ -150,7 +214,7 @@ export function RoadmapSection({ assessmentData, onComplete }: RoadmapSectionPro
             <Card 
               key={phase.id} 
               className={`shadow-lg border-0 bg-card/50 backdrop-blur-sm cursor-pointer transition-all duration-300 ${
-                selectedPhase === phase.id ? 'ring-2 ring-primary' : ''
+                selectedPhase === phase.id ? 'ring-2 ring-primary shadow-xl' : 'hover:shadow-lg'
               }`}
               onClick={() => setSelectedPhase(selectedPhase === phase.id ? null : phase.id)}
             >

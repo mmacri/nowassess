@@ -2,9 +2,10 @@
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Download, CheckCircle, FileText, Printer } from "lucide-react";
+import { Download, CheckCircle, FileText, Printer, ExternalLink } from "lucide-react";
 import { AssessmentData } from "@/types/assessment";
 import { useToast } from "@/hooks/use-toast";
+import { generateRecommendations } from "@/utils/recommendationEngine";
 
 interface ReportsSectionProps {
   assessmentData: AssessmentData;
@@ -14,45 +15,185 @@ interface ReportsSectionProps {
 export function ReportsSection({ assessmentData, onComplete }: ReportsSectionProps) {
   const { toast } = useToast();
 
-  const handleDownloadReport = () => {
-    // Create a simple download functionality
+  const generateComprehensiveReport = () => {
+    const recommendations = generateRecommendations(assessmentData);
+    const answers = assessmentData.answers || {};
+    
     const reportContent = `
-ServiceNow Assessment Report
+SERVICENOW BUSINESS ASSESSMENT REPORT
 Generated: ${new Date().toLocaleDateString()}
+==============================================
 
-SUMMARY STATISTICS:
-- Recommended Modules: 3
-- Expected ROI: 250%
-- Implementation Timeline: 9-12 months
-- Efficiency Improvement: 40%
+EXECUTIVE SUMMARY
+-----------------
+This comprehensive assessment identifies key opportunities for ServiceNow implementation
+based on your organization's specific needs and challenges.
 
-ASSESSMENT RESPONSES:
-${JSON.stringify(assessmentData, null, 2)}
+ORGANIZATION PROFILE
+-------------------
+Team Size: ${answers.teamSize || 'Not specified'}
+Budget: ${answers.budget || 'Not specified'}
+Timeline: ${answers.timeline || 'Not specified'}
+Current Processes: ${answers.currentProcesses || 'Not specified'}
+
+BUSINESS CHALLENGES IDENTIFIED
+------------------------------
+${(answers.businessChallenges || []).map((challenge, i) => `${i + 1}. ${challenge}`).join('\n')}
+
+OPERATIONAL ASSESSMENT
+---------------------
+• Operational Bottlenecks: ${answers.operationalBottlenecks || 'Not specified'}
+• IT Disruptions: ${answers.itDisruptions || 'Not specified'}
+• Leadership Insight: ${answers.leadershipInsight || 'Not specified'}
+• Tools Integration: ${answers.toolsIntegration || 'Not specified'}
+• Incident Response: ${answers.incidentResponse || 'Not specified'}
+
+RECOMMENDED SERVICENOW MODULES
+=============================
+
+${recommendations.map((module, index) => `
+${index + 1}. ${module.name}
+   Priority: ${module.priority}
+   Complexity: ${module.complexity}
+   Implementation Time: ${module.implementationTime}
+   Expected ROI: ${module.roi}
+   
+   Description:
+   ${module.description}
+   
+   Key Benefits:
+   ${module.benefits.map(benefit => `   • ${benefit}`).join('\n')}
+   
+   Dependencies: ${module.dependencies.length > 0 ? module.dependencies.join(', ') : 'None'}
+   
+   Resources Available:
+   ${(module.resources || []).map(resource => `   • ${resource.title} - ${resource.description}`).join('\n')}
+`).join('\n')}
+
+IMPLEMENTATION ROADMAP
+=====================
+
+PHASE 1: Foundation & Planning (6-8 weeks)
+• Platform setup and configuration
+• User accounts and permissions configured
+• Basic ITSM workflows implemented
+• Initial team training completed
+• Core integrations established
+
+PHASE 2: Core Module Deployment (6-8 weeks)
+• Advanced workflows configured
+• Knowledge base populated with content
+• Custom dashboards and reports created
+• Department-specific processes implemented
+• User adoption metrics established
+
+PHASE 3: Optimization & Scale (6-8 weeks)
+• Full organization rollout completed
+• Advanced analytics and reporting implemented
+• Process optimization and automation
+• Performance metrics and KPIs established
+• Continuous improvement processes in place
+
+PROJECTED OUTCOMES
+==================
+• Expected ROI: 250-400% within first 18 months
+• Incident Resolution Improvement: 40-60% faster
+• Process Automation: 70% of routine tasks automated
+• User Satisfaction: 45% improvement expected
+• Operational Efficiency: 40% overall improvement
+
+NEXT STEPS
+==========
+1. Schedule a discovery session with ServiceNow experts
+2. Conduct detailed technical assessment
+3. Develop customized implementation plan
+4. Begin change management planning
+5. Establish project team and governance
+
+SERVICENOW RESOURCES
+===================
+• Product Documentation: https://docs.servicenow.com/
+• Learning Platform: https://nowlearning.servicenow.com/
+• Community: https://community.servicenow.com/
+• Contact Sales: https://www.servicenow.com/contact/
+• Schedule Demo: https://www.servicenow.com/demo/
+
+CONTACT INFORMATION
+==================
+For questions about this assessment or to discuss implementation:
+• ServiceNow Sales: https://www.servicenow.com/contact/
+• Professional Services: https://www.servicenow.com/services/
+• Partner Network: https://www.servicenow.com/partners/
+
+==============================================
+Report Generated by ServiceNow Solution Advisor
+© ${new Date().getFullYear()} ServiceNow, Inc.
     `;
     
-    const blob = new Blob([reportContent], { type: 'text/plain' });
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement('a');
-    a.href = url;
-    a.download = 'servicenow-assessment-report.txt';
-    document.body.appendChild(a);
-    a.click();
-    document.body.removeChild(a);
-    URL.revokeObjectURL(url);
-    
-    toast({
-      title: "Report Downloaded",
-      description: "Your comprehensive ServiceNow assessment report has been downloaded.",
-    });
+    return reportContent;
+  };
+
+  const handleDownloadReport = () => {
+    try {
+      const reportContent = generateComprehensiveReport();
+      const blob = new Blob([reportContent], { type: 'text/plain;charset=utf-8' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `servicenow-assessment-report-${new Date().toISOString().split('T')[0]}.txt`;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
+      
+      toast({
+        title: "Complete Report Downloaded",
+        description: "Your comprehensive ServiceNow assessment report with all sections has been downloaded.",
+      });
+    } catch (error) {
+      toast({
+        title: "Download Error",
+        description: "There was an issue downloading the report. Please try again.",
+        variant: "destructive"
+      });
+    }
   };
 
   const handlePrintReport = () => {
-    window.print();
+    // Create a new window with the full report content for printing
+    const reportContent = generateComprehensiveReport();
+    const printWindow = window.open('', '_blank');
+    if (printWindow) {
+      printWindow.document.write(`
+        <html>
+          <head>
+            <title>ServiceNow Assessment Report</title>
+            <style>
+              body { font-family: Arial, sans-serif; margin: 20px; line-height: 1.6; }
+              h1, h2 { color: #2c3e50; }
+              pre { white-space: pre-wrap; font-family: Arial, sans-serif; }
+            </style>
+          </head>
+          <body>
+            <pre>${reportContent}</pre>
+          </body>
+        </html>
+      `);
+      printWindow.document.close();
+      printWindow.print();
+    }
+    
     toast({
-      title: "Print Dialog Opened",
-      description: "Use your browser's print function to print the assessment report.",
+      title: "Print Report Ready",
+      description: "The complete assessment report is ready for printing.",
     });
   };
+
+  const recommendations = generateRecommendations(assessmentData);
+  const totalROI = recommendations.reduce((acc, rec) => {
+    const roiMatch = rec.roi.match(/(\d+)%/);
+    return acc + (roiMatch ? parseInt(roiMatch[1]) : 0);
+  }, 0);
 
   return (
     <div className="bg-gray-100">
@@ -68,20 +209,20 @@ ${JSON.stringify(assessmentData, null, 2)}
           </h1>
           
           <p className="text-xl text-gray-600 max-w-3xl mx-auto">
-            Your comprehensive assessment report is ready. Download or print your results to 
-            discuss your ServiceNow implementation strategy.
+            Your comprehensive assessment report is ready. Download the complete report with 
+            detailed recommendations, implementation roadmap, and ROI projections.
           </p>
         </div>
 
         {/* Summary Statistics */}
         <div className="grid grid-cols-2 md:grid-cols-4 gap-6 mb-16">
           <div className="text-center p-6 bg-white rounded-lg shadow-sm border border-gray-200">
-            <div className="text-3xl font-bold text-teal-600 mb-2">3</div>
+            <div className="text-3xl font-bold text-teal-600 mb-2">{recommendations.length}</div>
             <div className="text-sm text-gray-600">Recommended Modules</div>
           </div>
           <div className="text-center p-6 bg-white rounded-lg shadow-sm border border-gray-200">
-            <div className="text-3xl font-bold text-teal-600 mb-2">250%</div>
-            <div className="text-sm text-gray-600">Expected ROI</div>
+            <div className="text-3xl font-bold text-teal-600 mb-2">{Math.round(totalROI / recommendations.length)}%</div>
+            <div className="text-sm text-gray-600">Average Expected ROI</div>
           </div>
           <div className="text-center p-6 bg-white rounded-lg shadow-sm border border-gray-200">
             <div className="text-3xl font-bold text-teal-600 mb-2">9-12</div>
@@ -100,9 +241,10 @@ ${JSON.stringify(assessmentData, null, 2)}
               <div className="w-16 h-16 mx-auto mb-4 bg-teal-100 rounded-full flex items-center justify-center">
                 <FileText className="w-8 h-8 text-teal-600" />
               </div>
-              <CardTitle className="text-2xl font-bold text-gray-900">Assessment Report</CardTitle>
+              <CardTitle className="text-2xl font-bold text-gray-900">Complete Assessment Report</CardTitle>
               <p className="text-gray-600">
-                Comprehensive analysis with recommendations, roadmap, and ROI projections
+                Comprehensive analysis with executive summary, detailed recommendations, 
+                implementation roadmap, ROI projections, and next steps
               </p>
             </CardHeader>
             
@@ -114,7 +256,15 @@ ${JSON.stringify(assessmentData, null, 2)}
                 </div>
                 <div className="flex justify-between text-sm">
                   <span className="text-gray-600">Report Type:</span>
-                  <span className="font-medium text-gray-900">Executive Summary + Implementation Plan</span>
+                  <span className="font-medium text-gray-900">Executive Summary + Technical Details</span>
+                </div>
+                <div className="flex justify-between text-sm">
+                  <span className="text-gray-600">Pages:</span>
+                  <span className="font-medium text-gray-900">Multi-page comprehensive report</span>
+                </div>
+                <div className="flex justify-between text-sm">
+                  <span className="text-gray-600">Modules Analyzed:</span>
+                  <span className="font-medium text-gray-900">{recommendations.length} ServiceNow solutions</span>
                 </div>
               </div>
 
@@ -124,7 +274,7 @@ ${JSON.stringify(assessmentData, null, 2)}
                   className="w-full h-12 bg-teal-600 hover:bg-teal-700 text-white font-medium"
                 >
                   <Download className="w-5 h-5 mr-2" />
-                  Download Report
+                  Download Complete Report
                 </Button>
                 
                 <Button 
@@ -136,6 +286,31 @@ ${JSON.stringify(assessmentData, null, 2)}
                   Print Report
                 </Button>
               </div>
+
+              {/* Quick Actions */}
+              <div className="border-t pt-6">
+                <h4 className="font-medium text-gray-900 mb-3">Next Steps</h4>
+                <div className="space-y-2">
+                  <a 
+                    href="https://www.servicenow.com/contact/"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="flex items-center justify-between p-3 bg-blue-50 rounded-lg hover:bg-blue-100 transition-colors"
+                  >
+                    <span className="text-sm font-medium text-blue-900">Contact ServiceNow Sales</span>
+                    <ExternalLink className="w-4 h-4 text-blue-600" />
+                  </a>
+                  <a 
+                    href="https://www.servicenow.com/demo/"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="flex items-center justify-between p-3 bg-green-50 rounded-lg hover:bg-green-100 transition-colors"
+                  >
+                    <span className="text-sm font-medium text-green-900">Schedule a Demo</span>
+                    <ExternalLink className="w-4 h-4 text-green-600" />
+                  </a>
+                </div>
+              </div>
             </CardContent>
           </Card>
         </div>
@@ -143,7 +318,7 @@ ${JSON.stringify(assessmentData, null, 2)}
         <div className="text-center mt-16">
           <p className="text-gray-600">
             Thank you for completing the ServiceNow Business Assessment. 
-            Your report is ready for download or printing.
+            Your comprehensive report includes all assessment details, recommendations, and implementation guidance.
           </p>
         </div>
       </div>
