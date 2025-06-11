@@ -3,7 +3,7 @@ import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Download, CheckCircle, FileText, Printer, ExternalLink } from "lucide-react";
-import { AssessmentData } from "@/types/assessment";
+import { AssessmentData, AssessmentAnswers } from "@/types/assessment";
 import { useToast } from "@/hooks/use-toast";
 import { generateRecommendations } from "@/utils/recommendationEngine";
 
@@ -17,7 +17,7 @@ export function ReportsSection({ assessmentData, onComplete }: ReportsSectionPro
 
   const generateComprehensiveReport = () => {
     const recommendations = generateRecommendations(assessmentData);
-    const answers = assessmentData.answers || {};
+    const answers: Partial<AssessmentAnswers> = assessmentData.answers || {};
     
     const reportContent = `
 SERVICENOW BUSINESS ASSESSMENT REPORT
@@ -115,13 +115,13 @@ SERVICENOW RESOURCES
 • Product Documentation: https://docs.servicenow.com/
 • Learning Platform: https://nowlearning.servicenow.com/
 • Community: https://community.servicenow.com/
-• Contact Sales: https://www.servicenow.com/contact/
-• Schedule Demo: https://www.servicenow.com/demo/
+• Contact Sales: https://www.servicenow.com/contact-us.html
+• Schedule Demo: https://www.servicenow.com/lpdem/demonow-digital-workflows.html
 
 CONTACT INFORMATION
 ==================
 For questions about this assessment or to discuss implementation:
-• ServiceNow Sales: https://www.servicenow.com/contact/
+• ServiceNow Sales: https://www.servicenow.com/contact-us.html
 • Professional Services: https://www.servicenow.com/services/
 • Partner Network: https://www.servicenow.com/partners/
 

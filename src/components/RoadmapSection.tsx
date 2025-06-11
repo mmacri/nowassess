@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { ArrowRight, Calendar, Users, Target, CheckCircle } from "lucide-react";
-import { AssessmentData, RoadmapPhase } from "@/types/assessment";
+import { AssessmentData, RoadmapPhase, AssessmentAnswers } from "@/types/assessment";
 
 interface RoadmapSectionProps {
   assessmentData: AssessmentData;
@@ -14,8 +14,8 @@ interface RoadmapSectionProps {
 const generateRoadmap = (data: AssessmentData): RoadmapPhase[] => {
   console.log('Generating roadmap with data:', data);
   
-  // Safe access to assessment data
-  const answers = data?.answers || {};
+  // Safe access to assessment data with proper typing
+  const answers: Partial<AssessmentAnswers> = data?.answers || {};
   const timeline = answers.timeline || 'Medium-term (6-12 months)';
   const teamSize = answers.teamSize || 'Medium (100-1,000 employees)';
   const budget = answers.budget || '$100K - $500K';
