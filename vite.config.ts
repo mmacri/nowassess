@@ -20,8 +20,8 @@ export default defineConfig(({ mode }) => ({
       "@": path.resolve(__dirname, "./src"),
     },
   },
-  // For GitHub Pages deployment - update this to match your repository name
-  base: process.env.NODE_ENV === 'production' ? '/your-repo-name/' : './',
+  // For GitHub Pages deployment - configured for nowassess repository
+  base: process.env.NODE_ENV === 'production' ? '/nowassess/' : './',
   build: {
     outDir: "dist",
     assetsDir: "assets",
