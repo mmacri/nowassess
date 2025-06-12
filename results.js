@@ -1,12 +1,305 @@
 
-// Results page logic for ServiceNow Solution Advisor
+// ServiceNow Solution Advisor Results Logic
 
-let assessmentData = {};
-let recommendations = [];
+// Load assessment data from local storage
+function loadAssessmentData() {
+    try {
+        const data = localStorage.getItem('serviceNowAssessmentAnswers');
+        return data ? JSON.parse(data) : null;
+    } catch (error) {
+        console.error('Error loading assessment data:', error);
+        return null;
+    }
+}
 
-// ServiceNow module definitions
-const serviceNowModules = {
-    'itsm': {
+// Initialize the results page
+document.addEventListener('DOMContentLoaded', function() {
+    // Show loading screen
+    showLoadingScreen();
+    
+    // Simulate processing time (for user experience)
+    setTimeout(() => {
+        // Hide loading screen and show results
+        hideLoadingScreen();
+        processResults();
+    }, 2000);
+});
+
+function showLoadingScreen() {
+    document.getElementById('loading-screen').style.display = 'flex';
+    document.getElementById('results-content').style.display = 'none';
+    document.getElementById('roadmap-section').style.display = 'none';
+}
+
+function hideLoadingScreen() {
+    document.getElementById('loading-screen').style.display = 'none';
+    document.getElementById('results-content').style.display = 'block';
+}
+
+function processResults() {
+    const assessmentData = loadAssessmentData();
+    
+    if (!assessmentData) {
+        showError("Assessment data not found. Please complete the assessment first.");
+        return;
+    }
+    
+    // Update the description based on company info
+    updateResultsDescription(assessmentData);
+    
+    // Generate metrics summary
+    generateMetricsSummary(assessmentData);
+    
+    // Generate recommendations
+    generateRecommendations(assessmentData);
+}
+
+function updateResultsDescription(data) {
+    const descriptionElement = document.getElementById('results-description');
+    let description = '';
+    
+    if (data.company) {
+        description = `Based on ${data.company}'s assessment, `;
+    } else {
+        description = 'Based on your assessment, ';
+    }
+    
+    if (data.businessChallenges && data.businessChallenges.length > 0) {
+        if (data.businessChallenges.length === 1) {
+            description += `we've identified ServiceNow modules to address your ${data.businessChallenges[0].toLowerCase()} challenge.`;
+        } else {
+            const lastChallenge = data.businessChallenges.pop();
+            description += `we've identified ServiceNow modules to address ${data.businessChallenges.map(c => c.toLowerCase()).join(', ')} and ${lastChallenge.toLowerCase()}.`;
+            // Put it back for later use
+            data.businessChallenges.push(lastChallenge);
+        }
+    } else {
+        description += "we've identified the ServiceNow modules that will deliver the greatest impact for your organization.";
+    }
+    
+    descriptionElement.textContent = description;
+}
+
+function generateMetricsSummary(data) {
+    const metricsContainer = document.getElementById('metrics-summary');
+    let metrics = [];
+    
+    // Organization Size
+    metrics.push({
+        label: 'Organization Size',
+        value: data.teamSize || 'Not specified',
+        icon: `<svg class="w-6 h-6 text-teal-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"></path></svg>`
+    });
+    
+    // Industry
+    if (data.industry) {
+        metrics.push({
+            label: 'Industry',
+            value: data.industry,
+            icon: `<svg class="w-6 h-6 text-teal-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"></path></svg>`
+        });
+    }
+    
+    // Budget Range
+    if (data.budget) {
+        metrics.push({
+            label: 'Budget Range',
+            value: data.budget,
+            icon: `<svg class="w-6 h-6 text-teal-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>`
+        });
+    }
+    
+    // Timeline
+    let timeline = data.urgency || data.timeline;
+    if (timeline) {
+        metrics.push({
+            label: 'Implementation Timeline',
+            value: timeline,
+            icon: `<svg class="w-6 h-6 text-teal-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>`
+        });
+    }
+    
+    // IT Maturity
+    if (data.itMaturity) {
+        metrics.push({
+            label: 'IT Maturity',
+            value: data.itMaturity.split(' - ')[0], // Just take the first part before the dash
+            icon: `<svg class="w-6 h-6 text-teal-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path></svg>`
+        });
+    }
+    
+    // Clear existing content
+    metricsContainer.innerHTML = '';
+    
+    // Add metrics to the container
+    metrics.forEach(metric => {
+        const metricElement = document.createElement('div');
+        metricElement.className = 'bg-white p-6 rounded-lg shadow-sm border border-gray-200';
+        metricElement.innerHTML = `
+            <div class="flex items-center mb-2">
+                ${metric.icon}
+                <span class="text-sm text-gray-500 ml-2">${metric.label}</span>
+            </div>
+            <div class="text-lg font-semibold text-gray-900">${metric.value}</div>
+        `;
+        metricsContainer.appendChild(metricElement);
+    });
+}
+
+// Generate recommendations based on all assessment factors
+function generateRecommendations(data) {
+    const recommendationsContainer = document.getElementById('recommendations-container');
+    recommendationsContainer.innerHTML = '';
+    
+    // Get intelligent recommendations based on all factors
+    const recommendations = getIntelligentRecommendations(data);
+    
+    // Create recommendation cards
+    recommendations.forEach((rec, index) => {
+        const card = document.createElement('div');
+        card.className = 'recommendation-card';
+        
+        let priorityClass = '';
+        let priorityLabel = '';
+        
+        switch(rec.priority) {
+            case 1:
+                priorityClass = 'bg-red-100 text-red-700 border-red-200';
+                priorityLabel = 'High Priority';
+                break;
+            case 2:
+                priorityClass = 'bg-orange-100 text-orange-700 border-orange-200';
+                priorityLabel = 'Medium Priority';
+                break;
+            case 3:
+                priorityClass = 'bg-blue-100 text-blue-700 border-blue-200';
+                priorityLabel = 'Standard';
+                break;
+        }
+        
+        let dependenciesHtml = '';
+        if (rec.dependencies && rec.dependencies.length > 0) {
+            dependenciesHtml = `
+                <div class="mt-4 pt-4 border-t border-gray-200">
+                    <p class="text-sm text-gray-700 font-medium">Dependencies:</p>
+                    <div class="flex flex-wrap gap-2 mt-2">
+                        ${rec.dependencies.map(dep => 
+                            `<span class="px-2 py-1 bg-gray-100 text-gray-700 text-xs rounded">${dep}</span>`
+                        ).join('')}
+                    </div>
+                </div>
+            `;
+        }
+        
+        let resourcesHtml = '';
+        if (rec.resources && rec.resources.length > 0) {
+            resourcesHtml = `
+                <div class="mt-4">
+                    <p class="text-sm text-gray-700 font-medium">Resources:</p>
+                    <ul class="mt-2 space-y-1">
+                        ${rec.resources.map(resource => 
+                            `<li>
+                                <a href="${resource.url}" target="_blank" class="text-sm text-teal-600 hover:underline">
+                                    ${resource.title}
+                                </a>
+                            </li>`
+                        ).join('')}
+                    </ul>
+                </div>
+            `;
+        }
+        
+        card.innerHTML = `
+            <div class="p-6">
+                <div class="flex justify-between items-start mb-4">
+                    <h3 class="text-xl font-semibold text-gray-900">${rec.name}</h3>
+                    <span class="px-3 py-1 rounded-full text-sm font-medium ${priorityClass}">${priorityLabel}</span>
+                </div>
+                
+                <p class="text-gray-600 mb-6">${rec.description}</p>
+                
+                <div>
+                    <p class="text-sm text-gray-700 font-medium">Key Benefits:</p>
+                    <ul class="mt-2 space-y-2">
+                        ${rec.benefits.map(benefit => 
+                            `<li class="flex items-start">
+                                <svg class="w-5 h-5 text-green-500 mr-2 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                                </svg>
+                                <span>${benefit}</span>
+                            </li>`
+                        ).join('')}
+                    </ul>
+                </div>
+                
+                <div class="grid grid-cols-2 gap-4 mt-6">
+                    <div>
+                        <p class="text-sm text-gray-500">Implementation</p>
+                        <p class="font-medium text-gray-900">${rec.implementationTime}</p>
+                    </div>
+                    <div>
+                        <p class="text-sm text-gray-500">Estimated ROI</p>
+                        <p class="font-medium text-gray-900">${rec.roi}</p>
+                    </div>
+                </div>
+                
+                ${dependenciesHtml}
+                ${resourcesHtml}
+            </div>
+        `;
+        
+        recommendationsContainer.appendChild(card);
+    });
+}
+
+// Complex recommendation engine that uses all assessment factors
+function getIntelligentRecommendations(data) {
+    console.log('Generating intelligent recommendations for:', data);
+    
+    // Initialize base recommendations
+    let recommendations = [];
+    
+    // Apply organization size-based logic
+    const isSmallOrg = data.teamSize && data.teamSize.includes('Small');
+    const isMediumOrg = data.teamSize && data.teamSize.includes('Medium');
+    const isLargeOrg = data.teamSize && (data.teamSize.includes('Large') || data.teamSize.includes('Enterprise'));
+    
+    // Apply budget constraints
+    const hasLimitedBudget = data.budget && (
+        data.budget.includes('Less than') || 
+        (data.budget.includes('$50K') && !data.budget.includes('$500K'))
+    );
+    
+    // Apply urgency factors
+    const needsImmediateSolution = data.urgency && data.urgency.includes('Crisis');
+    
+    // Apply IT maturity filters
+    const hasLowMaturity = data.itMaturity && data.itMaturity.includes('Basic');
+    const hasHighMaturity = data.itMaturity && (data.itMaturity.includes('Advanced') || data.itMaturity.includes('Leading'));
+    
+    // Get key challenges
+    const challenges = data.businessChallenges || [];
+    
+    // Compliance requirements
+    const hasComplianceNeeds = data.complianceRequirements && 
+                               data.complianceRequirements.length > 0 && 
+                               !data.complianceRequirements.includes('None');
+    
+    // Role-based adjustments
+    const isCSuiteOrManager = data.role && (
+        data.role.includes('C-Suite') || 
+        data.role.includes('Manager') || 
+        data.role.includes('Director')
+    );
+    
+    // Industry-specific factors
+    const isHealthcare = data.industry === 'Healthcare';
+    const isFinancial = data.industry === 'Financial Services';
+    const isManufacturing = data.industry === 'Manufacturing';
+    const isTechnology = data.industry === 'Technology/Software';
+    
+    // Base ITSM recommendation - virtually always included
+    let itsmRec = {
         id: 'itsm',
         name: 'IT Service Management (ITSM)',
         description: 'Streamline IT service delivery with automated workflows, incident management, and service catalog capabilities.',
@@ -17,518 +310,500 @@ const serviceNowModules = {
             'Centralized service catalog',
             'Better SLA management'
         ],
-        implementationTime: '3-4 months',
+        implementationTime: getImplementationTime('itsm', data),
         complexity: 'Medium',
         priority: 1,
         dependencies: [],
-        roi: '250% in first year'
-    },
-    'security-operations': {
-        id: 'security-operations',
-        name: 'Security Operations (SecOps)',
-        description: 'Enhance security incident response and vulnerability management with integrated security operations.',
-        benefits: [
-            'Faster security incident response',
-            'Improved threat detection',
-            'Automated vulnerability management',
-            'Better compliance reporting'
-        ],
-        implementationTime: '4-6 months',
-        complexity: 'High',
-        priority: 2,
-        dependencies: ['ITSM'],
-        roi: '300% in 18 months'
-    },
-    'customer-service': {
-        id: 'customer-service',
-        name: 'Customer Service Management (CSM)',
-        description: 'Improve customer experience with comprehensive case management and omnichannel support.',
-        benefits: [
-            'Reduce customer resolution time',
-            'Improve customer satisfaction',
-            'Unified customer view',
-            'Omnichannel support'
-        ],
-        implementationTime: '4-5 months',
-        complexity: 'Medium',
-        priority: 2,
-        dependencies: ['ITSM'],
-        roi: '200% in first year'
-    },
-    'hrsd': {
-        id: 'hrsd',
-        name: 'HR Service Delivery (HRSD)',
-        description: 'Streamline HR processes and improve employee experience with self-service capabilities.',
-        benefits: [
-            'Reduce HR case resolution time',
-            'Improve employee satisfaction',
-            'Automate HR processes',
-            'Better employee onboarding'
-        ],
-        implementationTime: '3-4 months',
-        complexity: 'Medium',
-        priority: 3,
-        dependencies: [],
-        roi: '180% in first year'
-    },
-    'process-automation': {
-        id: 'process-automation',
-        name: 'Process Automation',
-        description: 'Automate repetitive tasks and workflows to improve efficiency and reduce errors.',
-        benefits: [
-            'Reduce manual work by 70%',
-            'Improve process consistency',
-            'Faster task completion',
-            'Reduced human errors'
-        ],
-        implementationTime: '2-3 months',
-        complexity: 'Low',
-        priority: 2,
-        dependencies: [],
-        roi: '400% in first year'
-    },
-    'grc': {
-        id: 'grc',
-        name: 'Governance, Risk, and Compliance (GRC)',
-        description: 'Manage enterprise risk, ensure compliance, and maintain governance frameworks.',
-        benefits: [
-            'Better risk visibility',
-            'Automated compliance reporting',
-            'Improved audit preparation',
-            'Risk mitigation strategies'
-        ],
-        implementationTime: '5-6 months',
-        complexity: 'High',
-        priority: 3,
-        dependencies: ['ITSM'],
-        roi: '220% in 18 months'
-    }
-};
-
-// Generate recommendations based on assessment data
-function generateRecommendations(data) {
-    const recs = [];
-    const challenges = data.businessChallenges || [];
+        roi: hasLowMaturity ? '300% in first year' : '200% in first year',
+        resources: [
+            {
+                title: 'ITSM Implementation Guide',
+                description: 'Step-by-step guide for ITSM deployment',
+                url: 'https://docs.servicenow.com/bundle/utah-it-service-management/page/product/service-catalog-management/concept/c_ServiceCatalogManagement.html',
+                type: 'documentation'
+            }
+        ]
+    };
     
-    // Always recommend ITSM as foundation
-    recs.push(serviceNowModules.itsm);
+    // Customize ITSM for small orgs
+    if (isSmallOrg) {
+        itsmRec.name = 'IT Service Management (ITSM) Express';
+        itsmRec.description = 'Streamlined IT service management designed for smaller organizations with essential workflows and service catalog.';
+        itsmRec.implementationTime = '2-3 months';
+    }
+    
+    recommendations.push(itsmRec);
     
     // Security-focused recommendations
     if (challenges.includes('Security vulnerabilities and threats') || 
-        challenges.includes('Compliance and risk management issues')) {
-        recs.push(serviceNowModules['security-operations']);
+        hasComplianceNeeds ||
+        isHealthcare || 
+        isFinancial) {
+        
+        let securityRec = {
+            id: 'security-operations',
+            name: 'Security Operations (SecOps)',
+            description: 'Enhance security incident response and vulnerability management with integrated security operations.',
+            benefits: [
+                'Faster security incident response',
+                'Improved threat detection',
+                'Automated vulnerability management',
+                'Better compliance reporting'
+            ],
+            implementationTime: getImplementationTime('security-operations', data),
+            complexity: 'High',
+            priority: challenges.includes('Security vulnerabilities and threats') ? 1 : 2,
+            dependencies: ['ITSM'],
+            roi: '300% in 18 months',
+            resources: []
+        };
+        
+        // Healthcare-specific adjustments
+        if (isHealthcare) {
+            securityRec.name = 'Healthcare Security Operations (SecOps)';
+            securityRec.description = 'HIPAA-compliant security operations designed for healthcare data protection and compliance.';
+            securityRec.benefits.push('HIPAA compliance automation');
+            securityRec.priority = 1;
+        }
+        
+        // Financial-specific adjustments
+        if (isFinancial) {
+            securityRec.name = 'Financial Security Operations (SecOps)';
+            securityRec.description = 'SOX and PCI-DSS compliant security operations designed for financial institutions.';
+            securityRec.benefits.push('Financial compliance automation');
+            securityRec.priority = 1;
+        }
+        
+        recommendations.push(securityRec);
     }
     
     // Customer service recommendations
-    if (challenges.includes('Customer service quality issues')) {
-        recs.push(serviceNowModules['customer-service']);
+    if (challenges.includes('Customer service quality issues') || 
+        challenges.includes('Inconsistent service delivery') || 
+        isLargeOrg) {
+        
+        recommendations.push({
+            id: 'customer-service',
+            name: 'Customer Service Management (CSM)',
+            description: 'Improve customer experience with comprehensive case management and omnichannel support.',
+            benefits: [
+                'Reduce customer resolution time',
+                'Improve customer satisfaction',
+                'Unified customer view',
+                'Omnichannel support'
+            ],
+            implementationTime: getImplementationTime('customer-service', data),
+            complexity: 'Medium',
+            priority: challenges.includes('Customer service quality issues') ? 1 : 2,
+            dependencies: ['ITSM'],
+            roi: '200% in first year',
+            resources: []
+        });
     }
     
     // HR Service Delivery for employee productivity
-    if (challenges.includes('Employee productivity concerns')) {
-        recs.push(serviceNowModules.hrsd);
+    if (challenges.includes('Employee productivity concerns') || 
+        isLargeOrg || 
+        (isMediumOrg && !hasLimitedBudget)) {
+        
+        recommendations.push({
+            id: 'hrsd',
+            name: 'HR Service Delivery (HRSD)',
+            description: 'Streamline HR processes and improve employee experience with self-service capabilities.',
+            benefits: [
+                'Reduce HR case resolution time',
+                'Improve employee satisfaction',
+                'Automate HR processes',
+                'Better employee onboarding'
+            ],
+            implementationTime: getImplementationTime('hrsd', data),
+            complexity: 'Medium',
+            priority: challenges.includes('Employee productivity concerns') ? 2 : 3,
+            dependencies: [],
+            roi: '180% in first year',
+            resources: []
+        });
     }
     
     // Process automation for manual processes
-    if (challenges.includes('Manual processes and inefficiencies')) {
-        recs.push(serviceNowModules['process-automation']);
+    if (challenges.includes('Manual processes and inefficiencies') || hasLowMaturity) {
+        recommendations.push({
+            id: 'process-automation',
+            name: 'Process Automation',
+            description: 'Automate repetitive tasks and workflows to improve efficiency and reduce errors.',
+            benefits: [
+                'Reduce manual work by 70%',
+                'Improve process consistency',
+                'Faster task completion',
+                'Reduced human errors'
+            ],
+            implementationTime: getImplementationTime('process-automation', data),
+            complexity: 'Low',
+            priority: challenges.includes('Manual processes and inefficiencies') ? 1 : 2,
+            dependencies: [],
+            roi: '400% in first year',
+            resources: []
+        });
     }
     
     // Governance, Risk, and Compliance
-    if (challenges.includes('Compliance and risk management issues')) {
-        recs.push(serviceNowModules.grc);
+    if (challenges.includes('Compliance and risk management issues') || 
+        hasComplianceNeeds ||
+        isHealthcare || 
+        isFinancial || 
+        (isLargeOrg && !hasLimitedBudget)) {
+        
+        let grcRec = {
+            id: 'grc',
+            name: 'Governance, Risk, and Compliance (GRC)',
+            description: 'Manage enterprise risk, ensure compliance, and maintain governance frameworks.',
+            benefits: [
+                'Better risk visibility',
+                'Automated compliance reporting',
+                'Improved audit preparation',
+                'Risk mitigation strategies'
+            ],
+            implementationTime: getImplementationTime('grc', data),
+            complexity: 'High',
+            priority: challenges.includes('Compliance and risk management issues') ? 2 : 3,
+            dependencies: ['ITSM'],
+            roi: '220% in 18 months',
+            resources: []
+        };
+        
+        // Industry-specific GRC adjustments
+        if (isHealthcare) {
+            grcRec.name = 'Healthcare GRC';
+            grcRec.description = 'Healthcare-specific governance, risk, and compliance tools designed for HIPAA and FDA requirements.';
+            grcRec.priority = 2;
+        } else if (isFinancial) {
+            grcRec.name = 'Financial GRC';
+            grcRec.description = 'Financial governance, risk, and compliance tools designed for SOX, PCI-DSS, and other regulations.';
+            grcRec.priority = 2;
+        }
+        
+        recommendations.push(grcRec);
     }
     
-    return recs.slice(0, 4); // Return top 4 recommendations
-}
-
-// Get priority badge class
-function getPriorityClass(priority) {
-    switch(priority) {
-        case 1: return 'priority-high';
-        case 2: return 'priority-medium';
-        default: return 'priority-low';
+    // IT Asset Management
+    if (challenges.includes('IT infrastructure management challenges') || 
+        isManufacturing || 
+        (isLargeOrg && !needsImmediateSolution)) {
+        
+        recommendations.push({
+            id: 'itam',
+            name: 'IT Asset Management (ITAM)',
+            description: 'Manage the full lifecycle of IT assets from procurement to disposal.',
+            benefits: [
+                'Reduce asset costs by 30%',
+                'Optimize license management',
+                'Automate asset procurement',
+                'Extend asset lifespan'
+            ],
+            implementationTime: getImplementationTime('itam', data),
+            complexity: 'Medium',
+            priority: challenges.includes('IT infrastructure management challenges') ? 2 : 3,
+            dependencies: ['ITSM'],
+            roi: '250% in 18 months',
+            resources: []
+        });
     }
-}
-
-// Get priority label
-function getPriorityLabel(priority) {
-    switch(priority) {
-        case 1: return 'High Priority';
-        case 2: return 'Medium Priority';
-        default: return 'Low Priority';
+    
+    // Application Portfolio Management for technology companies
+    if (isTechnology || hasHighMaturity || challenges.includes('Development workflow optimization')) {
+        recommendations.push({
+            id: 'apm',
+            name: 'Application Portfolio Management',
+            description: 'Manage your software applications portfolio with powerful development workflow integration.',
+            benefits: [
+                'Streamline development workflows',
+                'Improve code quality',
+                'Better project visibility',
+                'DevOps integration'
+            ],
+            implementationTime: getImplementationTime('apm', data),
+            complexity: 'High',
+            priority: isTechnology ? 2 : 3,
+            dependencies: ['ITSM'],
+            roi: '180% in first year',
+            resources: []
+        });
     }
+    
+    // Performance Analytics for large orgs or data-driven companies
+    if (isCSuiteOrManager || 
+        (isLargeOrg && hasHighMaturity) || 
+        challenges.includes('Poor visibility into operations')) {
+        
+        recommendations.push({
+            id: 'performance-analytics',
+            name: 'Performance Analytics',
+            description: 'Gain actionable insights from your ServiceNow data with powerful analytics and dashboards.',
+            benefits: [
+                'Real-time performance visibility',
+                'Data-driven decision making',
+                'Custom executive dashboards',
+                'Predictive analytics'
+            ],
+            implementationTime: getImplementationTime('performance-analytics', data),
+            complexity: 'Medium',
+            priority: challenges.includes('Poor visibility into operations') ? 2 : 3,
+            dependencies: ['ITSM'],
+            roi: '200% in 18 months',
+            resources: []
+        });
+    }
+    
+    // Adjust priorities based on urgency
+    if (needsImmediateSolution) {
+        recommendations.forEach(rec => {
+            if (rec.priority > 1 && rec.complexity !== 'High') {
+                rec.priority = Math.max(1, rec.priority - 1);
+            }
+        });
+    }
+    
+    // Sort recommendations by priority
+    recommendations.sort((a, b) => a.priority - b.priority);
+    
+    // If limited budget, filter to more essential recommendations
+    if (hasLimitedBudget) {
+        recommendations = recommendations.filter(rec => 
+            rec.priority <= 2 || rec.id === 'itsm'
+        );
+    }
+    
+    // Return top recommendations
+    return recommendations.slice(0, isLargeOrg ? 6 : 4);
 }
 
-// Create recommendation card HTML
-function createRecommendationCard(module, index) {
-    return `
-        <div class="recommendation-card p-6">
-            <div class="flex items-start justify-between mb-4">
-                <div class="space-y-2">
-                    <div class="flex items-center space-x-3">
-                        <span class="px-3 py-1 text-sm border border-gray-300 rounded-full">#${index + 1}</span>
-                        <span class="px-3 py-1 text-sm rounded-full ${getPriorityClass(module.priority)}">${getPriorityLabel(module.priority)}</span>
-                    </div>
-                    <h3 class="text-xl font-bold text-gray-900">${module.name}</h3>
-                </div>
-                <div class="text-right">
-                    <div class="text-sm text-gray-500">Expected ROI</div>
-                    <div class="text-lg font-bold text-teal-600">${module.roi}</div>
-                </div>
+// Get implementation time estimate based on module and customer factors
+function getImplementationTime(moduleId, data) {
+    // Base implementation times
+    const baseTimes = {
+        'itsm': '3-4 months',
+        'security-operations': '4-6 months',
+        'customer-service': '3-4 months',
+        'hrsd': '3-4 months',
+        'process-automation': '2-3 months',
+        'grc': '5-6 months',
+        'itam': '4-5 months',
+        'apm': '4-5 months',
+        'performance-analytics': '3-4 months'
+    };
+    
+    // Adjust for organization size
+    if (data.teamSize && data.teamSize.includes('Small')) {
+        return shortenTimeEstimate(baseTimes[moduleId]);
+    }
+    
+    if (data.teamSize && data.teamSize.includes('Enterprise')) {
+        return lengthenTimeEstimate(baseTimes[moduleId]);
+    }
+    
+    // Adjust for IT maturity
+    if (data.itMaturity) {
+        if (data.itMaturity.includes('Advanced') || data.itMaturity.includes('Leading')) {
+            return shortenTimeEstimate(baseTimes[moduleId]);
+        }
+        if (data.itMaturity.includes('Basic')) {
+            return lengthenTimeEstimate(baseTimes[moduleId]);
+        }
+    }
+    
+    // Adjust for urgency
+    if (data.urgency && data.urgency.includes('Crisis')) {
+        return shortenTimeEstimate(baseTimes[moduleId]);
+    }
+    
+    return baseTimes[moduleId];
+}
+
+function shortenTimeEstimate(timeRange) {
+    const [min, max] = timeRange.split('-').map(t => parseInt(t));
+    return `${Math.max(1, min - 1)}-${max - 1} months`;
+}
+
+function lengthenTimeEstimate(timeRange) {
+    const [min, max] = timeRange.split('-').map(t => parseInt(t));
+    return `${min + 1}-${max + 2} months`;
+}
+
+// Show error message
+function showError(message) {
+    const resultsContent = document.getElementById('results-content');
+    resultsContent.innerHTML = `
+        <div class="max-w-2xl mx-auto p-8 bg-white rounded-lg shadow-lg border border-red-200">
+            <div class="text-red-600 mb-4">
+                <svg class="w-12 h-12 mx-auto" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                </svg>
             </div>
-            
-            <p class="text-gray-600 mb-6">${module.description}</p>
-            
-            <div class="grid md:grid-cols-2 gap-6">
-                <div>
-                    <h4 class="font-semibold mb-3 flex items-center text-gray-900">
-                        <svg class="w-4 h-4 mr-2 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-                        </svg>
-                        Key Benefits
-                    </h4>
-                    <ul class="space-y-2">
-                        ${module.benefits.map(benefit => `
-                            <li class="flex items-start space-x-2 text-sm">
-                                <div class="w-1.5 h-1.5 bg-teal-500 rounded-full mt-2 flex-shrink-0"></div>
-                                <span class="text-gray-700">${benefit}</span>
-                            </li>
-                        `).join('')}
-                    </ul>
-                </div>
-                
-                <div class="space-y-4">
-                    <div class="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
-                        <div class="flex items-center">
-                            <svg class="w-4 h-4 mr-2 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-                            </svg>
-                            <span class="text-sm font-medium text-gray-700">Implementation</span>
-                        </div>
-                        <span class="text-sm text-gray-900">${module.implementationTime}</span>
-                    </div>
-                    
-                    <div class="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
-                        <div class="flex items-center">
-                            <svg class="w-4 h-4 mr-2 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"></path>
-                            </svg>
-                            <span class="text-sm font-medium text-gray-700">Complexity</span>
-                        </div>
-                        <span class="text-sm text-gray-900">${module.complexity}</span>
-                    </div>
-                    
-                    ${module.dependencies.length > 0 ? `
-                        <div class="p-3 bg-yellow-50 rounded-lg border border-yellow-200">
-                            <div class="text-sm font-medium text-yellow-800 mb-1">Dependencies</div>
-                            <div class="text-xs text-yellow-700">${module.dependencies.join(', ')}</div>
-                        </div>
-                    ` : ''}
-                </div>
-            </div>
-            
-            <div class="mt-6 pt-6 border-t border-gray-200">
-                <button onclick="window.open('https://www.servicenow.com/contact/', '_blank')" class="w-full px-6 py-3 bg-teal-600 hover:bg-teal-700 text-white rounded-lg transition-colors">
-                    Learn More About ${module.name}
+            <h3 class="text-xl font-bold text-center mb-4">Error</h3>
+            <p class="text-gray-700 text-center">${message}</p>
+            <div class="mt-8 text-center">
+                <button onclick="goHome()" class="px-6 py-2 bg-teal-600 hover:bg-teal-700 text-white rounded-lg transition-colors">
+                    Start Over
                 </button>
             </div>
         </div>
     `;
-}
-
-// Create metrics summary
-function createMetricsSummary(recs) {
-    const totalROI = recs.reduce((acc, rec) => {
-        const roiMatch = rec.roi.match(/(\d+)%/);
-        return acc + (roiMatch ? parseInt(roiMatch[1]) : 0);
-    }, 0);
-    
-    return `
-        <div class="text-center p-6 bg-white rounded-lg shadow-sm border border-gray-200">
-            <div class="text-3xl font-bold text-teal-600 mb-2">${recs.length}</div>
-            <div class="text-sm text-gray-600">Recommended Modules</div>
-        </div>
-        <div class="text-center p-6 bg-white rounded-lg shadow-sm border border-gray-200">
-            <div class="text-3xl font-bold text-teal-600 mb-2">${Math.round(totalROI / recs.length)}%</div>
-            <div class="text-sm text-gray-600">Average Expected ROI</div>
-        </div>
-        <div class="text-center p-6 bg-white rounded-lg shadow-sm border border-gray-200">
-            <div class="text-3xl font-bold text-teal-600 mb-2">9-12</div>
-            <div class="text-sm text-gray-600">Implementation Months</div>
-        </div>
-        <div class="text-center p-6 bg-white rounded-lg shadow-sm border border-gray-200">
-            <div class="text-3xl font-bold text-teal-600 mb-2">40%</div>
-            <div class="text-sm text-gray-600">Efficiency Improvement</div>
-        </div>
-    `;
-}
-
-// Show results after loading
-function showResults() {
-    const loadingScreen = document.getElementById('loading-screen');
-    const resultsContent = document.getElementById('results-content');
-    
-    // Generate recommendations
-    recommendations = generateRecommendations(assessmentData);
-    
-    // Update description with company name
-    const description = document.getElementById('results-description');
-    if (assessmentData.company) {
-        description.textContent = `Based on your assessment, we've identified the ServiceNow modules that will deliver the greatest impact for ${assessmentData.company}.`;
-    }
-    
-    // Populate metrics summary
-    const metricsContainer = document.getElementById('metrics-summary');
-    metricsContainer.innerHTML = createMetricsSummary(recommendations);
-    
-    // Populate recommendations
-    const recommendationsContainer = document.getElementById('recommendations-container');
-    recommendationsContainer.innerHTML = recommendations.map((rec, index) => 
-        createRecommendationCard(rec, index)
-    ).join('');
-    
-    // Hide loading, show results
-    loadingScreen.classList.add('hidden');
-    resultsContent.classList.remove('hidden');
-    resultsContent.classList.add('fade-in');
+    resultsContent.style.display = 'block';
 }
 
 // Show roadmap section
 function showRoadmap() {
-    const resultsContent = document.getElementById('results-content');
-    const roadmapSection = document.getElementById('roadmap-section');
+    const assessmentData = loadAssessmentData();
     
-    // Generate roadmap timeline
-    const timeline = document.getElementById('roadmap-timeline');
-    timeline.innerHTML = generateRoadmapTimeline();
-    
-    resultsContent.classList.add('hidden');
-    roadmapSection.classList.remove('hidden');
-    roadmapSection.classList.add('fade-in');
-}
-
-// Generate roadmap timeline
-function generateRoadmapTimeline() {
-    const phases = [
-        {
-            name: 'Foundation & Planning',
-            duration: '6-8 weeks',
-            description: 'Platform setup, configuration, and initial team training',
-            milestones: [
-                'Platform setup and configuration',
-                'User accounts and permissions configured',
-                'Basic ITSM workflows implemented',
-                'Initial team training completed',
-                'Core integrations established'
-            ]
-        },
-        {
-            name: 'Core Module Deployment',
-            duration: '6-8 weeks', 
-            description: 'Deploy recommended ServiceNow modules with custom workflows',
-            milestones: [
-                'Advanced workflows configured',
-                'Knowledge base populated with content',
-                'Custom dashboards and reports created',
-                'Department-specific processes implemented',
-                'User adoption metrics established'
-            ]
-        },
-        {
-            name: 'Optimization & Scale',
-            duration: '6-8 weeks',
-            description: 'Full rollout with optimization and continuous improvement',
-            milestones: [
-                'Full organization rollout completed',
-                'Advanced analytics and reporting implemented',
-                'Process optimization and automation',
-                'Performance metrics and KPIs established',
-                'Continuous improvement processes in place'
-            ]
-        }
-    ];
-    
-    return phases.map((phase, index) => `
-        <div class="timeline-item">
-            <div class="ml-6">
-                <div class="flex items-center justify-between mb-2">
-                    <h3 class="text-xl font-bold text-gray-900">Phase ${index + 1}: ${phase.name}</h3>
-                    <span class="text-sm font-medium text-teal-600">${phase.duration}</span>
-                </div>
-                <p class="text-gray-600 mb-4">${phase.description}</p>
-                <ul class="space-y-2">
-                    ${phase.milestones.map(milestone => `
-                        <li class="flex items-start space-x-2">
-                            <svg class="w-4 h-4 text-green-500 mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-                            </svg>
-                            <span class="text-sm text-gray-700">${milestone}</span>
-                        </li>
-                    `).join('')}
-                </ul>
-            </div>
-        </div>
-    `).join('');
-}
-
-// Download report function
-function downloadReport() {
-    const reportContent = generateReportContent();
-    const blob = new Blob([reportContent], { type: 'text/plain;charset=utf-8' });
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement('a');
-    a.href = url;
-    a.download = `servicenow-assessment-report-${new Date().toISOString().split('T')[0]}.txt`;
-    document.body.appendChild(a);
-    a.click();
-    document.body.removeChild(a);
-    URL.revokeObjectURL(url);
-    
-    alert('Complete assessment report downloaded successfully!');
-}
-
-// Print report function
-function printReport() {
-    const reportContent = generateReportContent();
-    const printWindow = window.open('', '_blank');
-    if (printWindow) {
-        printWindow.document.write(`
-            <html>
-                <head>
-                    <title>ServiceNow Assessment Report</title>
-                    <style>
-                        body { font-family: Arial, sans-serif; margin: 20px; line-height: 1.6; }
-                        h1, h2 { color: #2c3e50; }
-                        pre { white-space: pre-wrap; font-family: Arial, sans-serif; }
-                    </style>
-                </head>
-                <body>
-                    <pre>${reportContent}</pre>
-                </body>
-            </html>
-        `);
-        printWindow.document.close();
-        printWindow.print();
-    }
-}
-
-// Generate comprehensive report content
-function generateReportContent() {
-    return `
-SERVICENOW BUSINESS ASSESSMENT REPORT
-Generated: ${new Date().toLocaleDateString()}
-==============================================
-
-EXECUTIVE SUMMARY
------------------
-This comprehensive assessment identifies key opportunities for ServiceNow implementation
-based on your organization's specific needs and challenges.
-
-ORGANIZATION PROFILE
--------------------
-Company: ${assessmentData.company || 'Not specified'}
-Contact: ${assessmentData.name || 'Not specified'}
-Email: ${assessmentData.email || 'Not specified'}
-Team Size: ${assessmentData.teamSize || 'Not specified'}
-Budget: ${assessmentData.budget || 'Not specified'}
-Timeline: ${assessmentData.timeline || 'Not specified'}
-Current Processes: ${assessmentData.currentProcesses || 'Not specified'}
-
-BUSINESS CHALLENGES IDENTIFIED
-------------------------------
-${(assessmentData.businessChallenges || []).map((challenge, i) => `${i + 1}. ${challenge}`).join('\n')}
-
-RECOMMENDED SERVICENOW MODULES
-=============================
-
-${recommendations.map((module, index) => `
-${index + 1}. ${module.name}
-   Priority: ${module.priority}
-   Complexity: ${module.complexity}
-   Implementation Time: ${module.implementationTime}
-   Expected ROI: ${module.roi}
-   
-   Description:
-   ${module.description}
-   
-   Key Benefits:
-   ${module.benefits.map(benefit => `   • ${benefit}`).join('\n')}
-   
-   Dependencies: ${module.dependencies.length > 0 ? module.dependencies.join(', ') : 'None'}
-`).join('\n')}
-
-IMPLEMENTATION ROADMAP
-=====================
-
-PHASE 1: Foundation & Planning (6-8 weeks)
-• Platform setup and configuration
-• User accounts and permissions configured
-• Basic ITSM workflows implemented
-• Initial team training completed
-• Core integrations established
-
-PHASE 2: Core Module Deployment (6-8 weeks)
-• Advanced workflows configured
-• Knowledge base populated with content
-• Custom dashboards and reports created
-• Department-specific processes implemented
-• User adoption metrics established
-
-PHASE 3: Optimization & Scale (6-8 weeks)
-• Full organization rollout completed
-• Advanced analytics and reporting implemented
-• Process optimization and automation
-• Performance metrics and KPIs established
-• Continuous improvement processes in place
-
-PROJECTED OUTCOMES
-==================
-• Expected ROI: 250-400% within first 18 months
-• Incident Resolution Improvement: 40-60% faster
-• Process Automation: 70% of routine tasks automated
-• User Satisfaction: 45% improvement expected
-• Operational Efficiency: 40% overall improvement
-
-NEXT STEPS
-==========
-1. Schedule a discovery session with ServiceNow experts
-2. Conduct detailed technical assessment
-3. Develop customized implementation plan
-4. Begin change management planning
-5. Establish project team and governance
-
-SERVICENOW RESOURCES
-===================
-• Product Documentation: https://docs.servicenow.com/
-• Learning Platform: https://nowlearning.servicenow.com/
-• Community: https://community.servicenow.com/
-• Contact Sales: https://www.servicenow.com/contact-us.html
-• Schedule Demo: https://www.servicenow.com/lpdem/demonow-digital-workflows.html
-
-==============================================
-Report Generated by ServiceNow Solution Advisor
-© ${new Date().getFullYear()} ServiceNow, Inc.
-    `;
-}
-
-// Go home function
-function goHome() {
-    window.location.href = 'index.html';
-}
-
-// Initialize results page
-document.addEventListener('DOMContentLoaded', function() {
-    // Load assessment data
-    const saved = localStorage.getItem('assessmentData');
-    if (saved) {
-        assessmentData = JSON.parse(saved);
-    } else {
-        // Redirect back to assessment if no data
-        window.location.href = 'assessment.html';
+    if (!assessmentData) {
+        showError("Assessment data not found. Please complete the assessment first.");
         return;
     }
     
-    // Show loading screen, then results after delay
-    setTimeout(showResults, 2000);
-});
+    // Hide results content and show roadmap
+    document.getElementById('results-content').style.display = 'none';
+    document.getElementById('roadmap-section').style.display = 'block';
+    
+    // Generate roadmap timeline
+    generateRoadmapTimeline(assessmentData);
+}
+
+// Generate implementation roadmap based on recommendations and assessment data
+function generateRoadmapTimeline(data) {
+    const roadmapContainer = document.getElementById('roadmap-timeline');
+    roadmapContainer.innerHTML = '';
+    
+    // Get recommendations to build roadmap
+    const recommendations = getIntelligentRecommendations(data);
+    
+    // Create roadmap phases based on urgency and complexity
+    let phases = [];
+    
+    // Phase 1 - Foundation (always includes ITSM)
+    phases.push({
+        title: 'Phase 1: Foundation',
+        description: 'Establish the core platform and immediate value',
+        timeline: '1-3 months',
+        modules: recommendations.filter(rec => 
+            rec.priority === 1 || rec.id === 'itsm'
+        ).map(rec => rec.name),
+        activities: [
+            'Platform setup and configuration',
+            'Core ITSM implementation',
+            'User training and adoption',
+            'Process documentation'
+        ]
+    });
+    
+    // Phase 2 - Expansion
+    const phase2Modules = recommendations.filter(rec => 
+        rec.priority === 2 && !phases[0].modules.includes(rec.name)
+    );
+    
+    if (phase2Modules.length > 0) {
+        phases.push({
+            title: 'Phase 2: Expansion',
+            description: 'Extend platform capabilities to address additional needs',
+            timeline: '3-6 months',
+            modules: phase2Modules.map(rec => rec.name),
+            activities: [
+                'Integration with existing systems',
+                'Workflow automation',
+                'Self-service portal enhancements',
+                'Advanced reporting setup'
+            ]
+        });
+    }
+    
+    // Phase 3 - Optimization
+    const phase3Modules = recommendations.filter(rec => 
+        rec.priority === 3 && 
+        !phases[0].modules.includes(rec.name) && 
+        (phases.length < 2 || !phases[1].modules.includes(rec.name))
+    );
+    
+    if (phase3Modules.length > 0) {
+        phases.push({
+            title: 'Phase 3: Optimization',
+            description: 'Maximize platform value with advanced capabilities',
+            timeline: '6-12 months',
+            modules: phase3Modules.map(rec => rec.name),
+            activities: [
+                'Advanced analytics implementation',
+                'Process optimization',
+                'Extended platform adoption',
+                'Continuous improvement framework'
+            ]
+        });
+    }
+    
+    // Adjust phases based on urgency
+    if (data.urgency && data.urgency.includes('Crisis')) {
+        phases.forEach(phase => {
+            phase.timeline = shortenTimeEstimate(phase.timeline);
+            phase.description = 'Accelerated ' + phase.description.toLowerCase();
+        });
+    }
+    
+    // Create roadmap elements
+    phases.forEach((phase, index) => {
+        const phaseElement = document.createElement('div');
+        phaseElement.className = 'bg-white rounded-lg p-8 shadow-sm border border-gray-200 timeline-item';
+        
+        const modulesList = phase.modules.length > 0 ? 
+            `<div class="mt-4">
+                <p class="font-medium text-gray-900">Modules:</p>
+                <ul class="mt-2 space-y-1">
+                    ${phase.modules.map(module => `<li class="flex items-start">
+                        <svg class="w-5 h-5 text-teal-600 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                        </svg>
+                        ${module}
+                    </li>`).join('')}
+                </ul>
+            </div>` : '';
+        
+        const activitiesList = phase.activities.length > 0 ?
+            `<div class="mt-4">
+                <p class="font-medium text-gray-900">Key Activities:</p>
+                <ul class="mt-2 space-y-1">
+                    ${phase.activities.map(activity => `<li class="flex items-start">
+                        <svg class="w-5 h-5 text-blue-600 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"></path>
+                        </svg>
+                        ${activity}
+                    </li>`).join('')}
+                </ul>
+            </div>` : '';
+        
+        phaseElement.innerHTML = `
+            <div class="flex justify-between items-center mb-2">
+                <h3 class="text-xl font-semibold text-gray-900">${phase.title}</h3>
+                <span class="bg-teal-100 text-teal-800 text-xs font-semibold px-3 py-1 rounded-full">${phase.timeline}</span>
+            </div>
+            
+            <p class="text-gray-600 mb-4">${phase.description}</p>
+            
+            ${modulesList}
+            ${activitiesList}
+        `;
+        
+        roadmapContainer.appendChild(phaseElement);
+    });
+}
+
+// Download report functionality
+function downloadReport() {
+    alert('Report download initiated. Your report will be downloaded as a PDF.');
+    // In a real implementation, this would generate a PDF
+}
+
+// Print report functionality
+function printReport() {
+    window.print();
+}
+
+// Go home
+function goHome() {
+    window.location.href = 'index.html';
+}
